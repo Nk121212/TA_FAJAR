@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect()->route('login');
+    // return view("auth.login");
 });
 
 Route::get('/portlet', [PortletController::class, 'index'])->name('portlet');

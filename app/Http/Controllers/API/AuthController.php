@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -27,9 +27,9 @@ class AuthController extends Controller
 
     // public function logout()
     // {
-    //     if (Auth()->check()) {
-    //     Auth::user()->AauthAcessToken()->delete();
-    //     return response(['message' => 'berhasil logout']);
+    //     if (auth()->check()) {
+    //         Auth::user()->AauthAcessToken()->delete();
+    //         return response(['message' => 'berhasil logout']);
     //     }
     // }
 }

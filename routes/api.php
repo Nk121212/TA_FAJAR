@@ -2,26 +2,29 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+/**
+ * route "/register"
+ * @method "POST"
+ */
+Route::post('/api_register', App\Http\Controllers\Api\RegisterController::class)->name('api_register');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/**
+ * route "/login"
+ * @method "POST"
+ */
+Route::post('/api_login', App\Http\Controllers\Api\LoginController::class)->name('api_login');
+
+/**
+ * route "/user"
+ * @method "GET"
+ */
+Route::middleware('auth:api')->get('/api_user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('login', [AuthController::class, 'login']);
-// Route::post('logout', [AuthController::class, 'logout']);
-
-// Route::group(['middleware' => ['auth:passport']], function(){
-//     Route::post('logout', [AuthController::class, 'logout']);
-// });
+/**
+ * route "/logout"
+ * @method "POST"
+ */
+Route::post('/api_logout', App\Http\Controllers\Api\LogoutController::class)->name('api_logout');
