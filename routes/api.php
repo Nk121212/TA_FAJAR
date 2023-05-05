@@ -23,6 +23,10 @@ Route::middleware('auth:api')->get('/api_user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => ['auth:api']], function() {
+    Route::get('/api_dashboard', [App\Http\Controllers\Api\ApiDashboardController::class, 'index'])->name('api_dashboard');
+});
+
 /**
  * route "/logout"
  * @method "POST"
