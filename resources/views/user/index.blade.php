@@ -100,6 +100,8 @@
             .done((response) => {
                 $('#modal-form [name=name]').val(response.name);
                 $('#modal-form [name=email]').val(response.email);
+                $('#modal-form [name=no_telp]').val(response.no_telp);
+                $('#modal-form [name=alamat]').val(response.alamat);
             })
             .fail((errors) => {
                 alert('Tidak dapat menampilkan data');
