@@ -25,6 +25,7 @@ Route::middleware('auth:api')->get('/api_user', function (Request $request) {
 
 Route::group(['middleware' => ['auth:api']], function() {
     Route::get('/api_dashboard', [App\Http\Controllers\Api\ApiDashboardController::class, 'index'])->name('api_dashboard');
+    Route::post('/api_update_profile', [App\Http\Controllers\Api\ApiUserController::class, 'updateProfil'])->name('api_update_profile');
 });
 
 /**
