@@ -35,6 +35,7 @@
                     <button type="button" class="btn btn-primary btn-block btn-flat" id="btn-cari">Cari</button>
                 </div>
             </div>
+            <a href="/">Kembali</a>
         </form>
     </div>
 </div>
