@@ -99,6 +99,8 @@ class UserController extends Controller
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->no_telp = $request->no_telp;
+        $user->alamat = $request->alamat;
         if ($request->has('password') && $request->password != "") 
             $user->password = bcrypt($request->password);
         $user->update();
@@ -130,6 +132,8 @@ class UserController extends Controller
         $user = auth()->user();
         
         $user->name = $request->name;
+        $user->no_telp = $request->no_telp;
+        $user->alamat = $request->alamat;
         if ($request->has('password') && $request->password != "") {
             if (Hash::check($request->old_password, $user->password)) {
                 if ($request->password == $request->password_confirmation) {
