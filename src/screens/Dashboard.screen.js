@@ -51,7 +51,7 @@ export default function Dashboard() {
             }
             title={'Pesanan Masuk'}
             subTitle={'Total pesanan masuk'}
-            amount={data?.list_po}
+            amount={data?.penjualan2}
           />
           <CardItem
             icon={
