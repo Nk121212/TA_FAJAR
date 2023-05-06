@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -13,16 +14,52 @@ import Tailwind from '../libs/tailwinds/Tailwind.lib';
 import {
   CheckIcon,
   EnvelopeIcon,
+  EyeIcon,
   EyeSlashIcon,
   LockClosedIcon,
 } from 'react-native-heroicons/outline';
 import CustomButton from '../components/molecules/CustomButton.molecule';
+import {RequestLogin} from '../libs/fetchings/Auth.lib';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {LoginReducer} from '../config/reducers/Auth.reducer';
 
 export default function Login({navigation}) {
   const height = Dimensions.get('window').height;
+  const dispatch = useDispatch();
+  const [secure, setSecure] = useState(true);
+  const [remember, setRemember] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
 
-  const handleLogin = () => {
-    return navigation.push('Dashboard');
+  const handleLogin = async () => {
+    if (!form.email || !form.password)
+      return ToastAndroid.show('Harap masukan Email dan Password', 2000);
+
+    setIsLoading(true);
+    const response = await RequestLogin(form.email, form.password);
+
+    if (response?.success) {
+      await AsyncStorage.setItem('token', JSON.stringify(response?.token));
+      await AsyncStorage.setItem('remember_me', JSON.stringify(remember));
+      await AsyncStorage.setItem(
+        'user',
+        JSON.stringify({
+          ...response?.user,
+          password: form.password,
+        }),
+      );
+
+      dispatch(LoginReducer(response?.user));
+      navigation.reset({index: 0, routes: [{name: 'Dashboard'}]});
+      setIsLoading(false);
+      return;
+    } else {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,6 +83,7 @@ export default function Login({navigation}) {
               style={Tailwind`flex-row items-center border-b border-gray-300 gap-2`}>
               <EnvelopeIcon style={Tailwind`text-primary--purple`} />
               <TextInput
+                onChangeText={text => setForm(prev => ({...prev, email: text}))}
                 placeholder="Email"
                 placeholderTextColor={'#10101040'}
                 style={Tailwind`font-gothic--regular text-sm text-black flex-1 py-1`}
@@ -55,30 +93,47 @@ export default function Login({navigation}) {
               style={Tailwind`flex-row items-center border-b border-gray-300 gap-2`}>
               <LockClosedIcon style={Tailwind`text-primary--purple`} />
               <TextInput
+                secureTextEntry={secure}
+                onChangeText={text =>
+                  setForm(prev => ({...prev, password: text}))
+                }
                 placeholder="Password"
                 placeholderTextColor={'#10101040'}
                 style={Tailwind`font-gothic--regular text-sm text-black flex-1 py-1`}
               />
-              <TouchableOpacity activeOpacity={0.7}>
-                <EyeSlashIcon style={Tailwind`text-gray-500`} />
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => setSecure(prev => !prev)}>
+                {secure ? (
+                  <EyeSlashIcon style={Tailwind`text-gray-500`} />
+                ) : (
+                  <EyeIcon style={Tailwind`text-gray-500`} />
+                )}
               </TouchableOpacity>
             </View>
             <View style={Tailwind`flex-row items-center gap-2`}>
-              <View
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => setRemember(prev => !prev)}
                 style={Tailwind`border border-gray-400 bg-white rounded-md w-5 h-5 items-center justify-center`}>
-                <CheckIcon style={Tailwind`text-gray-900`} size={15} />
-              </View>
+                <CheckIcon
+                  style={Tailwind`${
+                    remember ? 'text-gray-900' : 'text-transparent'
+                  }`}
+                  size={15}
+                />
+              </TouchableOpacity>
               <Text
                 style={Tailwind`font-gothic--regular text-sm text-gray-600`}>
-                Remember Password
+                Remember Me
               </Text>
             </View>
 
             <View style={Tailwind`w-full h-13`}>
               <CustomButton
                 onPress={handleLogin}
-                text={'Login'}
-                color={'bg-primary--purple'}
+                text={isLoading ? 'Logging in' : 'Login'}
+                color={isLoading ? 'bg-gray-300' : 'bg-primary--purple'}
               />
             </View>
           </View>

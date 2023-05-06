@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, View, Text, ScrollView} from 'react-native';
 import BottomNavbar from '../components/organisms/BottomNavbar.organism';
 import Tailwind from '../libs/tailwinds/Tailwind.lib';
@@ -12,36 +12,33 @@ import {
 } from 'react-native-heroicons/outline';
 import Spacer from '../components/atoms/Spacer.atom';
 import CardItem from '../components/organisms/CardItem.organism';
+import {useSelector} from 'react-redux';
+import {ReqGetDashboard} from '../libs/fetchings/Dashboard.lib';
+import LoadingFetch from '../components/organisms/LoadingFetch.organism';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Dashboard() {
-  const _renderList = (icon, title, subTitle, amount) => (
-    <View
-      style={Tailwind`bg-white p-3 rounded-lg flex-row items-center mt-4 mb-1 gap-3 shadow`}>
-      <View
-        style={Tailwind`bg-gray-100 rounded-lg w-16 h-16 items-center justify-center`}>
-        {icon}
-      </View>
-      <View style={Tailwind`flex-1`}>
-        <Text style={Tailwind`font-gothic--semibold text-base text-gray-900`}>
-          {title}
-        </Text>
-        <Text style={Tailwind`font-gothic--regular text-sm text-gray-500`}>
-          {subTitle}
-        </Text>
-      </View>
-      <View>
-        <View
-          style={Tailwind`items-center justify-center bg-primary--purple rounded-md h-9 px-2`}>
-          <Text style={Tailwind`font-gothic--medium text-base text-white`}>
-            {amount}
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
+  const user = useSelector(state => state.auth.user);
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const initData = async () => {
+      setIsLoading(true);
+      const response = await ReqGetDashboard();
+      setData(response.data);
+      setIsLoading(false);
+    };
+    initData();
+  }, []);
+
   return (
     <SafeAreaView style={Tailwind`min-w-full min-h-full`}>
-      <TopBar showGoBack={false} title={'Dashboard'} subTitle="Administrator" />
+      <TopBar
+        showGoBack={false}
+        title={'Dashboard'}
+        subTitle={user.level === 1 ? 'Administrator' : 'Pegawai'}
+      />
       <View style={Tailwind`flex-1 px-6`}>
         <ScrollView>
           <Spacer height={'18'} width={'full'} />
@@ -54,7 +51,7 @@ export default function Dashboard() {
             }
             title={'Pesanan Masuk'}
             subTitle={'Total pesanan masuk'}
-            amount={'21'}
+            amount={data?.list_po}
           />
           <CardItem
             icon={
@@ -65,7 +62,7 @@ export default function Dashboard() {
             }
             title={'Member'}
             subTitle={'Total member'}
-            amount={'21'}
+            amount={data?.member}
           />
           <CardItem
             icon={
@@ -76,7 +73,7 @@ export default function Dashboard() {
             }
             title={'Baham Baku'}
             subTitle={'Total bahan baku'}
-            amount={'100'}
+            amount={data?.produk}
           />
           <CardItem
             icon={
@@ -84,17 +81,19 @@ export default function Dashboard() {
             }
             title={'Supplier'}
             subTitle={'Total supplier'}
-            amount={'50'}
+            amount={data?.supplier}
           />
           <CardItem
             icon={<TagIcon style={Tailwind`text-primary--purple`} size={32} />}
             title={'Kategori'}
             subTitle={'Total kategori'}
-            amount={'3'}
+            amount={data?.kategori}
           />
         </ScrollView>
       </View>
       <BottomNavbar />
+
+      {isLoading && <LoadingFetch />}
     </SafeAreaView>
   );
 }

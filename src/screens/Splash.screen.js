@@ -1,15 +1,57 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, SafeAreaView, Text, ToastAndroid, View} from 'react-native';
 import Tailwind from '../libs/tailwinds/Tailwind.lib';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {RequestLogin} from '../libs/fetchings/Auth.lib';
+import {LoginReducer} from '../config/reducers/Auth.reducer';
+import {useDispatch} from 'react-redux';
 
 export default function Splash({navigation}) {
+  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   ToastAndroid.show('This demo app is made by MY@TH Productions', 10000);
+  //   const redirect = setTimeout(() => {
+  //     navigation.replace('Login');
+  //   }, 2000);
+  //   return () => clearTimeout(redirect);
+  // }, [navigation]);
+
   useEffect(() => {
-    ToastAndroid.show('This demo app is made by MY@TH Productions', 10000);
-    const redirect = setTimeout(() => {
-      navigation.replace('Login');
-    }, 2000);
-    return () => clearTimeout(redirect);
-  }, [navigation]);
+    const initData = async () => {
+      const remember = await AsyncStorage.getItem('remember_me');
+      if (JSON.parse(remember)) {
+        const user = await AsyncStorage.getItem('user');
+        const parsedUser = JSON.parse(user);
+        const response = await RequestLogin(
+          parsedUser.email,
+          parsedUser.password,
+        );
+        if (response?.success) {
+          await AsyncStorage.setItem('token', JSON.stringify(response?.token));
+
+          await AsyncStorage.setItem(
+            'user',
+            JSON.stringify({
+              ...response?.user,
+              password: parsedUser.password,
+            }),
+          );
+
+          dispatch(LoginReducer(response?.user));
+          return navigation.reset({index: 0, routes: [{name: 'Dashboard'}]});
+        } else {
+          setTimeout(() => {
+            navigation.replace('Login');
+          }, 2000);
+        }
+      } else {
+        setTimeout(() => {
+          navigation.replace('Login');
+        }, 2000);
+      }
+    };
+    initData();
+  });
 
   return (
     <SafeAreaView>

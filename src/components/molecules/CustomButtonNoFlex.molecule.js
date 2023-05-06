@@ -6,9 +6,11 @@ const CustomButtonNoFlex = ({
   text,
   height,
   onPress = () => ToastAndroid.show('Fitur dalam pengembangan.', 2000),
+  disabled = false,
 }) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       activeOpacity={0.7}
       onPress={() => onPress()}
       style={Tailwind`${color} items-center justify-center min-h-4 rounded-lg

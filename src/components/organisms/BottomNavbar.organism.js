@@ -1,7 +1,12 @@
 import React from 'react';
 import Tailwind from '../../libs/tailwinds/Tailwind.lib';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {TouchableHighlight, View} from 'react-native';
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  TouchableHighlight,
+  View,
+} from 'react-native';
 import {
   HomeIcon as HomeIconOutline,
   ShoppingCartIcon as ShoppingCartIconOutline,
@@ -16,6 +21,7 @@ import {
 const BottomNavbar = () => {
   const route = useRoute();
   const navigation = useNavigation();
+  const height = Dimensions.get('window').height;
 
   const _renderIcons = (condition, iconActive, iconDeactive) => (
     <>{condition ? iconActive : iconDeactive}</>
@@ -23,7 +29,9 @@ const BottomNavbar = () => {
 
   return (
     <View
-      style={Tailwind`absolute bottom-0 w-full shadow-lg bg-white flex-row z-10`}>
+      style={Tailwind`absolute top-[${
+        height - 56
+      }px] w-full shadow-lg bg-white flex-row z-10`}>
       <TouchableHighlight
         underlayColor={'#605CA840'}
         onPress={() =>

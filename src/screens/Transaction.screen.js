@@ -18,8 +18,10 @@ import {
   TagIcon,
   UserGroupIcon,
 } from 'react-native-heroicons/outline';
+import {useSelector} from 'react-redux';
 
 export default function Transaction({navigation}) {
+  const user = useSelector(state => state.auth.user);
   return (
     <SafeAreaView style={Tailwind`min-w-full min-h-full`}>
       <TopBar showGoBack={false} title={'Transaksi'} subTitle="Administrator" />
@@ -40,6 +42,7 @@ export default function Transaction({navigation}) {
             </View>
           </View>
           <CardItem
+            hide={user.level !== 1 ? true : false}
             icon={
               <Square3Stack3DIcon
                 style={Tailwind`text-primary--purple`}

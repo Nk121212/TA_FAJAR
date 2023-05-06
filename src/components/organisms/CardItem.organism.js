@@ -1,13 +1,15 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import Tailwind from '../../libs/tailwinds/Tailwind.lib';
 
-const CardItem = ({icon, title, subTitle, amount, onPress}) => {
+const CardItem = ({icon, title, subTitle, amount, onPress, hide = false}) => {
   return (
     <TouchableOpacity
       activeOpacity={0.9}
       disabled={onPress ? false : true}
       onPress={onPress ? () => onPress() : () => null}
-      style={Tailwind`bg-white p-3 rounded-lg flex-row items-center mt-4 mb-1 gap-3 shadow`}>
+      style={Tailwind`bg-white p-3 rounded-lg flex-row items-center mt-4 mb-1 gap-3 shadow ${
+        hide ? 'hidden' : ''
+      }`}>
       <View
         style={Tailwind`bg-gray-100 rounded-lg w-16 h-16 items-center justify-center`}>
         {icon}

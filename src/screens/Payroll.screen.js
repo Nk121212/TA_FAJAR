@@ -9,10 +9,13 @@ import {
 import Tailwind from '../libs/tailwinds/Tailwind.lib';
 import TopBar from '../components/organisms/TopBar.organism';
 import BottomNavbar from '../components/organisms/BottomNavbar.organism';
-import {ChevronDownIcon} from 'react-native-heroicons/outline';
+import {ChevronDownIcon, ChevronUpIcon} from 'react-native-heroicons/outline';
 import Spacer from '../components/atoms/Spacer.atom';
 import CustomButton from '../components/molecules/CustomButton.molecule';
 import TextCols from '../components/molecules/TextCols.organism';
+import SelectDropdown from 'react-native-select-dropdown';
+
+const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
 
 export default function Payroll() {
   const [isExist, setIsExist] = useState(false);
@@ -29,20 +32,39 @@ export default function Payroll() {
                   style={Tailwind`font-gothic--regular text-primary--purple text-sm`}>
                   Pegawai
                 </Text>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  style={Tailwind`flex-row items-center justify-between border border-gray-300 p-3 rounded-md`}>
-                  <Fragment>
-                    <Text
-                      style={Tailwind`flex-1 font-gothic--semibold text-sm text-black`}>
-                      Pegawai A
-                    </Text>
-                    <ChevronDownIcon
-                      style={Tailwind`text-primary--purple`}
-                      size={24}
-                    />
-                  </Fragment>
-                </TouchableOpacity>
+
+                <SelectDropdown
+                  data={countries}
+                  defaultButtonText="Pilih Pegawai"
+                  buttonStyle={Tailwind`w-full bg-white rounded-md border border-gray-300`}
+                  buttonTextStyle={Tailwind`font-gothic--semibold text-sm text-black text-left`}
+                  renderDropdownIcon={isOpened =>
+                    isOpened ? (
+                      <ChevronUpIcon
+                        style={Tailwind`text-primary--purple`}
+                        size={24}
+                      />
+                    ) : (
+                      <ChevronDownIcon
+                        style={Tailwind`text-primary--purple`}
+                        size={24}
+                      />
+                    )
+                  }
+                  onSelect={(selectedItem, index) => {
+                    console.log(selectedItem, index);
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item;
+                  }}
+                />
               </View>
             </View>
 
@@ -51,29 +73,7 @@ export default function Payroll() {
                 <View style={Tailwind`flex-col gap-2`}>
                   <Text
                     style={Tailwind`font-gothic--regular text-primary--purple text-sm`}>
-                    Periode Bulan
-                  </Text>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={Tailwind`flex-row items-center justify-between border border-gray-300 p-3 rounded-md`}>
-                    <Fragment>
-                      <Text
-                        style={Tailwind`flex-1 font-gothic--semibold text-sm text-black`}>
-                        Pegawai A
-                      </Text>
-                      <ChevronDownIcon
-                        style={Tailwind`text-primary--purple`}
-                        size={24}
-                      />
-                    </Fragment>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={Tailwind`flex-1`}>
-                <View style={Tailwind`flex-col gap-2`}>
-                  <Text
-                    style={Tailwind`font-gothic--regular text-primary--purple text-sm`}>
-                    Periode Bulan
+                    Periode
                   </Text>
                   <TouchableOpacity
                     activeOpacity={0.5}
