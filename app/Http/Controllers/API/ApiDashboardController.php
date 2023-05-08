@@ -49,7 +49,7 @@ class ApiDashboardController extends Controller
         $tanggal_awal = date('Y-m-01');
 
         return response()->json([
-            'success' => true,
+            'status' => true,
             'data' => array(
                 'kategori' => $kategori,
                 'produk' => $produk,
