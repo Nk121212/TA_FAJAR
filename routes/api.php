@@ -26,8 +26,8 @@ Route::middleware('auth:api')->get('/api_user', function (Request $request) {
 Route::group(['middleware' => ['auth:api']], function() {
     Route::get('/api_dashboard', [App\Http\Controllers\Api\ApiDashboardController::class, 'index'])->name('api_dashboard');
     Route::post('/api_update_profile', [App\Http\Controllers\Api\ApiUserController::class, 'updateProfil'])->name('api_update_profile');
-    // Route::get('/api_get_pendapatan', [App\Http\Controllers\Api\ApiLaporanController::class, 'index'])->name('api_get_pendapatan');
     Route::get('/api_pendapatan', [App\Http\Controllers\Api\ApiLaporanController::class, 'index'])->name('api_pendapatan');
+    Route::get('/api_portlet', [App\Http\Controllers\Api\ApiPortletController::class, 'data'])->name('api_portlet');
 });
 
 /**
