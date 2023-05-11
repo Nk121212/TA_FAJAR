@@ -181,7 +181,10 @@ class ApiListpoController extends Controller
             $gaji->save();
         }
 
-        return response()->json('Data berhasil disimpan', 200);
+        return response()->json([
+            'result' => true,
+            'message' => 'Data berhasil disimpan'
+        ], 200);
     }
 
     /**
