@@ -22,6 +22,18 @@ class ApiPenjualanController extends Controller
         //
     }
 
+    public function show($id_penjualan){
+
+        $penjualan = Penjualan::where('id_penjualan', '=', $id_penjualan);
+
+        return response()->json([
+            'result' => true,
+            'data' => $penjualan->get(),
+            'total_data' => $penjualan->count()
+        ]);
+
+    }
+
     public function menunggu(Request $request){
 
         if(!$_REQUEST){
@@ -43,17 +55,28 @@ class ApiPenjualanController extends Controller
 
     }
 
-    public function berjalan(){
+    // public function berjalan(){
 
-        $pesanan_berjalan = Penjualan::where('status', '=', 3)->orderBy('id_penjualan', 'desc')->get();
+    //     if(!$_REQUEST){
+    //         $pesanan_berjalan = Penjualan::where('status', '=', 3)->orderBy('id_penjualan', 'desc')->get();
+    //     }else{
+    //         $search = $_REQUEST['search'];
+    //         $pesanan_berjalan = Penjualan::where('status', '=', 3)
+    //         ->where('id_penjualan', '=', $search)
+    //         ->orWhere('nama_pemesan', 'LIKE', '%'.$search.'%')
+    //         ->orWhere('nama_catalog', 'LIKE', '%'.$search.'%')
+    //         ->orderBy('id_penjualan', 'desc')->get();
+    //     }
+
+    //     // $pesanan_berjalan = Penjualan::where('status', '=', 3)->orderBy('id_penjualan', 'desc')->get();
         
-        return response()->json([
-            'result' => true,
-            'data' => $pesanan_berjalan,
-            'total_data' => $pesanan_berjalan->count()
-        ], 200);
+    //     return response()->json([
+    //         'result' => true,
+    //         'data' => $pesanan_berjalan,
+    //         'total_data' => $pesanan_berjalan->count()
+    //     ], 200);
 
-    }
+    // }
 
     public function create()
     {

@@ -38,7 +38,9 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::get('/get_pesanan_menunggu', [App\Http\Controllers\Api\ApiPenjualanController::class, 'menunggu'])->name('get_pesanan_menunggu');
     Route::get('/kirim_pesanan/{id}', [App\Http\Controllers\Api\ApiListpoController::class, 'create'])->name('kirim_pesanan');
     Route::delete('/delete_pesanan/{id}', [App\Http\Controllers\Api\ApiPenjualanController::class, 'destroy'])->name('delete_pesanan');
-    Route::get('/get_pesanan_berjalan', [App\Http\Controllers\Api\ApiPenjualanController::class, 'berjalan'])->name('get_pesanan_berjalan');
+    Route::get('/get_pesanan_berjalan', [App\Http\Controllers\Api\ApiListpoController::class, 'data'])->name('get_pesanan_berjalan');
+    Route::get('/get_penjualan/{id}', [App\Http\Controllers\Api\ApiPenjualanController::class, 'show'])->name('get_penjualan');
+    Route::get('/update_penjualan/{id}', [App\Http\Controllers\Api\ApiListpoController::class, 'update'])->name('update_penjualan');
     // Route::group(['middleware' => 'level:1'], function () {
         
     // });

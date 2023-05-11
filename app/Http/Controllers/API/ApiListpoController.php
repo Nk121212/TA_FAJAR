@@ -10,6 +10,7 @@ use App\Models\Listpo;
 use App\Models\Status;
 use App\Models\Penjualan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ApiListpoController extends Controller
 {
@@ -22,6 +23,74 @@ class ApiListpoController extends Controller
     public function __invoke(Request $request)
     {
         //
+    }
+
+    public function data(Request $request)
+    {
+
+        // $getAssigne = Listpo::select(DB::Raw('users.name as pegawai'))
+        // ->join('users','users.id', '=', 'list_po.assigne');
+
+        $listpo = Listpo::select(DB::Raw('list_po.id as id, penjualan.created_at as tgl_order, penjualan.status AS status_penjualan, penjualan.id_penjualan as no_pesanan, list_po.kode_po as kode_po, start_date as mulai, end_date as selesai,
+        assigne as penugasan, status.nama as status, users.name as nama_user, (SELECT users.name FROM users WHERE users.id = list_po.assigne) AS pegawai'))
+        ->join('status', 'status.id', '=', 'list_po.id_statuses')
+        ->join('penjualan', 'penjualan.id_penjualan', '=', 'list_po.id_penjualan')
+        ->join('users', 'users.id', '=', 'list_po.id_user')->orderBy('list_po.created_at','desc');
+
+        if($_REQUEST){
+
+            $search = $_REQUEST['search'];
+
+            $listpo = $listpo->where('list_po.id_penjualan', 'LIKE', "'%$search%'")->orWhere('status.nama', 'LIKE', "'%$search%'");
+
+        }
+
+        if (Auth::user()->level == 1) {
+            // echo 'lvl 1';
+            if ($request->assigne != null) {
+                // echo 'assigne tdk null';
+                $listpo = $listpo->where('list_po.assigne', '=', $request->assigne);
+            } else {
+                // echo 'assigne null';
+            }
+        } else {
+            // echo 'lvl != 1';
+            // echo auth()->user()->id;
+            $listpo = $listpo->where('list_po.assigne', '=', auth()->user()->id);
+        }
+
+        return response()->json([
+            'result' => true,
+            'data' => $listpo->get(),
+            'total_data' => $listpo->get()->count()
+        ], 200);
+
+        // dd($listpo->toSql());
+
+        // print_r($listpo);
+        // exit;
+       
+        // return datatables()
+        //     ->of($listpo->get())
+        //     ->addIndexColumn()
+        //     ->addColumn('aksi', function ($listpo) {
+        //         if ($listpo->status == 3 || strtolower($listpo->status) == "selesai") {
+        //             return '
+        //         <div class="btn-group">
+        //             <button onclick="deleteData(`'. route('listpo.destroy', $listpo->id) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
+        //         </div>
+        //         ';
+        //     } else {
+        //         return '
+        //         <div class="btn-group">
+        //         <button onclick="deleteData(`'. route('listpo.destroy', $listpo->id) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
+        //         <button onclick="editForm(`'. route('listpo.update', $listpo->id) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-pencil"></i></button>
+        //         </div>
+        //         ';
+        //     }
+        //     })
+        //     ->rawColumns(['aksi'])
+        //     ->make(true);
     }
 
     public function create($id_penjualan)
