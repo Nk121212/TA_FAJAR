@@ -5,8 +5,19 @@ import Tailwind from '../libs/tailwinds/Tailwind.lib';
 import {MagnifyingGlassIcon} from 'react-native-heroicons/outline';
 import Divider from '../components/atoms/Divider.atom';
 import CustomButton from '../components/molecules/CustomButton.molecule';
+import {useEffect, useState} from 'react';
+import {ReqWaitingOrdeList} from '../libs/fetchings/WaitListOrder.lib';
 
 export default function WaitingOrder() {
+  const [listOrder, setListOrder] = useState(null);
+  useEffect(() => {
+    const initData = async () => {
+      const response = await ReqWaitingOrdeList();
+
+      setListOrder(response.data);
+    };
+    initData();
+  }, []);
   return (
     <SafeAreaView style={Tailwind`w-full h-full`}>
       <TopBar title={'Pesanan Tunggu'} subTitle={'Administrator'} />
@@ -26,7 +37,8 @@ export default function WaitingOrder() {
 
         <View style={Tailwind``}>
           <FlatList
-            data={[...Array(12)].fill('*')}
+            data={listOrder}
+            // initialNumToRender={10}
             ListHeaderComponent={() => <Spacer height={'4'} width={'full'} />}
             ListFooterComponent={() => <Spacer height={'18'} width={'full'} />}
             ItemSeparatorComponent={() => (
@@ -38,7 +50,7 @@ export default function WaitingOrder() {
                 <View style={Tailwind`p-4 bg-primary--purple rounded-md`}>
                   <Text
                     style={Tailwind`font-gothic--semibold text-base text-white text-center`}>
-                    Kaca Bordir 18 x 18
+                    {item?.nama_catalog || '-'}
                   </Text>
                 </View>
                 <View style={Tailwind`my-4 flex-col gap-2`}>
@@ -49,7 +61,7 @@ export default function WaitingOrder() {
                     </Text>
                     <Text
                       style={Tailwind`font-gothic--medium text-sm text-gray-900 flex-2 text-right`}>
-                      123124151
+                      {item?.id_penjualan || '-'}
                     </Text>
                   </View>
                   <View style={Tailwind`flex-row items-start`}>
@@ -59,7 +71,7 @@ export default function WaitingOrder() {
                     </Text>
                     <Text
                       style={Tailwind`font-gothic--medium text-sm text-gray-900 flex-2 text-right`}>
-                      Jamilah
+                      {item?.nama_pemesan || '-'}
                     </Text>
                   </View>
                   <View style={Tailwind`flex-row items-start`}>
@@ -69,7 +81,7 @@ export default function WaitingOrder() {
                     </Text>
                     <Text
                       style={Tailwind`font-gothic--medium text-sm text-gray-900 flex-2 text-right`}>
-                      087812345678
+                      {item?.telepon || '-'}
                     </Text>
                   </View>
                   <View style={Tailwind`flex-row items-start`}>
@@ -79,8 +91,7 @@ export default function WaitingOrder() {
                     </Text>
                     <Text
                       style={Tailwind`font-gothic--medium text-sm text-gray-900 flex-2 text-right`}>
-                      Jl. Permata Y No 18 Desa gandarasei Kec. Katapang Kab
-                      Badung
+                      {item?.alamat || '-'}
                     </Text>
                   </View>
                 </View>

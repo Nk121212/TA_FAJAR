@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, View, Text, ScrollView} from 'react-native';
 import BottomNavbar from '../components/organisms/BottomNavbar.organism';
 import Tailwind from '../libs/tailwinds/Tailwind.lib';
@@ -19,9 +19,39 @@ import {
   UserGroupIcon,
 } from 'react-native-heroicons/outline';
 import {useSelector} from 'react-redux';
+import {ReqWaitingOrdeList} from '../libs/fetchings/WaitListOrder.lib';
+import {ReqOnProcessOrderList} from '../libs/fetchings/OnProcessOrder.lib';
+import {ReqGetIncome} from '../libs/fetchings/Income.lib';
 
 export default function Transaction({navigation}) {
   const user = useSelector(state => state.auth.user);
+  const [firstDate] = useState(new Date());
+  const [currentDate] = useState(new Date());
+  const [income, setIncome] = useState(null);
+
+  const [amount, setAmount] = useState({
+    waiting_list: '',
+    onprocess: '',
+  });
+  useEffect(() => {
+    const initData = async () => {
+      firstDate.setDate(1);
+      const formatFirstDate = firstDate.toISOString().substring(0, 10);
+      const formatCurrentDate = currentDate.toISOString().substring(0, 10);
+
+      const respWaitingList = await ReqWaitingOrdeList();
+      const respOnProcessList = await ReqOnProcessOrderList();
+      const respIncome = await ReqGetIncome(formatFirstDate, currentDate);
+
+      setIncome(respIncome?.data?.pendapatan);
+      setAmount(prev => ({
+        ...prev,
+        waiting_list: respWaitingList?.total_data,
+        onprocess: respOnProcessList?.total_data,
+      }));
+    };
+    initData();
+  }, []);
   return (
     <SafeAreaView style={Tailwind`min-w-full min-h-full`}>
       <TopBar showGoBack={false} title={'Transaksi'} subTitle="Administrator" />
@@ -37,7 +67,7 @@ export default function Transaction({navigation}) {
             <View style={Tailwind`bg-white py-2 px-3 rounded-md`}>
               <Text
                 style={Tailwind`font-gothic--medium text-sm text-primary--purple`}>
-                Rp.4.000.000
+                Rp{income || 0}
               </Text>
             </View>
           </View>
@@ -51,7 +81,7 @@ export default function Transaction({navigation}) {
             }
             title={'Pesanan Menunggu'}
             subTitle={'Total pesanan tunggu'}
-            amount={'21'}
+            amount={amount.waiting_list}
             onPress={() => navigation.push('WaitingOrder')}
           />
           <CardItem
@@ -63,7 +93,7 @@ export default function Transaction({navigation}) {
             }
             title={'Pesanan Berjalan'}
             subTitle={'Total pesanan berjalan'}
-            amount={'21'}
+            amount={amount.onprocess}
             onPress={() => navigation.push('OngoingOrder')}
           />
           <CardItem
@@ -72,7 +102,6 @@ export default function Transaction({navigation}) {
             }
             title={'Penggajian'}
             subTitle={'Daftar Gaji'}
-            amount={'100'}
             onPress={() => navigation.push('Payroll')}
           />
           <CardItem
@@ -84,7 +113,6 @@ export default function Transaction({navigation}) {
             }
             title={'Pengeluaran'}
             subTitle={'Daftar Pengeluaran'}
-            amount={'50'}
             onPress={() => navigation.push('Expense')}
           />
           <CardItem

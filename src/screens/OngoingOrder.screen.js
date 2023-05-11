@@ -5,14 +5,25 @@ import Tailwind from '../libs/tailwinds/Tailwind.lib';
 import {MagnifyingGlassIcon} from 'react-native-heroicons/outline';
 import Divider from '../components/atoms/Divider.atom';
 import CustomButton from '../components/molecules/CustomButton.molecule';
+import {useEffect, useState} from 'react';
+import {ReqOnProcessOrderList} from '../libs/fetchings/OnProcessOrder.lib';
 
 export default function OngoingOrder({navigation}) {
+  const [listOrder, setListOrder] = useState(null);
+  useEffect(() => {
+    const initData = async () => {
+      const response = await ReqOnProcessOrderList();
+
+      setListOrder(response.data);
+    };
+    initData();
+  }, []);
   const handleNavToEdit = () => {
     return navigation.push('OngoingEdit');
   };
 
-  const handleNavToDetail = () => {
-    return navigation.push('DetailOrder');
+  const handleNavToDetail = item => {
+    return navigation.push('DetailOrder', {id: item.no_pesanan});
   };
 
   return (
@@ -34,7 +45,8 @@ export default function OngoingOrder({navigation}) {
 
         <View style={Tailwind``}>
           <FlatList
-            data={[...Array(12)].fill('*')}
+            data={listOrder}
+            initialNumToRender={10}
             ListHeaderComponent={() => <Spacer height={'4'} width={'full'} />}
             ListFooterComponent={() => <Spacer height={'18'} width={'full'} />}
             ItemSeparatorComponent={() => (
@@ -48,12 +60,12 @@ export default function OngoingOrder({navigation}) {
                     style={Tailwind`px-4 py-2 flex-1 bg-primary--purple rounded-md flex-row items-center justify-between`}>
                     <Text
                       style={Tailwind`font-gothic--semibold text-base text-white text-center`}>
-                      PO-12345678
+                      {item?.kode_po}
                     </Text>
                     <View style={Tailwind`bg-white/30 px-3 py-1 rounded-md`}>
                       <Text
-                        style={Tailwind`font-gothic--regular text-white text-xs`}>
-                        Pengerjaan
+                        style={Tailwind`font-gothic--semibold text-white text-xs`}>
+                        {item?.status.toUpperCase()}
                       </Text>
                     </View>
                   </View>
@@ -72,7 +84,7 @@ export default function OngoingOrder({navigation}) {
                     </Text>
                     <Text
                       style={Tailwind`font-gothic--medium text-sm text-gray-900 flex-2 text-right`}>
-                      2023-03-07
+                      {item?.mulai || '-'}
                     </Text>
                   </View>
                   <View style={Tailwind`flex-row items-start`}>
@@ -82,7 +94,7 @@ export default function OngoingOrder({navigation}) {
                     </Text>
                     <Text
                       style={Tailwind`font-gothic--medium text-sm text-gray-900 flex-2 text-right`}>
-                      2023-03-08
+                      {item?.selesai || '-'}
                     </Text>
                   </View>
                   <View style={Tailwind`flex-row items-start`}>
@@ -92,7 +104,17 @@ export default function OngoingOrder({navigation}) {
                     </Text>
                     <Text
                       style={Tailwind`font-gothic--medium text-sm text-gray-900 flex-2 text-right`}>
-                      Pegawai A
+                      {item?.pegawai || '-'}
+                    </Text>
+                  </View>
+                  <View style={Tailwind`flex-row items-start`}>
+                    <Text
+                      style={Tailwind`font-gothic--regular text-sm text-gray-500 flex-1`}>
+                      No.Pesanan
+                    </Text>
+                    <Text
+                      style={Tailwind`font-gothic--medium text-sm text-gray-900 flex-2 text-right`}>
+                      {item?.no_pesanan || '-'}
                     </Text>
                   </View>
                 </View>
@@ -103,7 +125,7 @@ export default function OngoingOrder({navigation}) {
                     color={'bg-blue-400'}
                     text={'Lihat Detail'}
                     height={'2'}
-                    onPress={() => handleNavToDetail()}
+                    onPress={() => handleNavToDetail(item)}
                   />
                   <CustomButton
                     color={'bg-green-500'}
