@@ -137,7 +137,7 @@ class ApiListpoController extends Controller
      */
     public function show($id)
     {
-      $assigne = User::where('id', '!=', 1)->pluck('name', 'id')->all();
+        $assigne = User::where('id', '!=', 1)->pluck('name', 'id')->all();
         $status = Status::all();
         $listpo = Listpo::find($id);
         $user_input = User::where('id', $listpo['id_user'])->pluck('name')->all();

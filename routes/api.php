@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::get('/get_penjualan/{id}', [App\Http\Controllers\Api\ApiPenjualanController::class, 'show'])->name('get_penjualan');
     Route::get('/update_penjualan/{id}', [App\Http\Controllers\Api\ApiListpoController::class, 'update'])->name('update_penjualan');
     Route::get('/get_gaji', [App\Http\Controllers\Api\ApiGajiController::class, 'data'])->name('get_gaji');
+    Route::get('/get_detail_list_po/{id}', [App\Http\Controllers\Api\ApiListpoController::class, 'show'])->name('get_detail_list_po');
     // Route::group(['middleware' => 'level:1'], function () {
         
     // });
