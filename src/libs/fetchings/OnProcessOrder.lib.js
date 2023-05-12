@@ -49,3 +49,39 @@ export const ReqGetDetailOrder = async no_pesanan => {
     return err?.response?.data;
   }
 };
+
+export const ReqUpdateOrder = async (
+  id,
+  id_statuses,
+  id_user,
+  start_date,
+  end_date,
+) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    const response = await axios.get(`/update_penjualan/${id}`, {
+      headers: {
+        Authorization: `Bearer ${JSON.parse(token)}`,
+        // 'Content-Type': 'multipart/form-data',
+        Accept: 'application/json',
+      },
+      params: {
+        id_statuses,
+        id_user,
+        start_date,
+        end_date,
+      },
+    });
+
+    return response?.data;
+  } catch (err) {
+    console.log('err__ReqUpdateOrder', err);
+    ToastAndroid.show(
+      err?.response?.data?.message
+        ? err?.response?.data?.message
+        : 'Network Error',
+      2000,
+    );
+    return err?.response?.data;
+  }
+};

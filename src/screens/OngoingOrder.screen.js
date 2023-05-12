@@ -5,21 +5,26 @@ import Tailwind from '../libs/tailwinds/Tailwind.lib';
 import {MagnifyingGlassIcon} from 'react-native-heroicons/outline';
 import Divider from '../components/atoms/Divider.atom';
 import CustomButton from '../components/molecules/CustomButton.molecule';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {ReqOnProcessOrderList} from '../libs/fetchings/OnProcessOrder.lib';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function OngoingOrder({navigation}) {
   const [listOrder, setListOrder] = useState(null);
-  useEffect(() => {
-    const initData = async () => {
-      const response = await ReqOnProcessOrderList();
 
-      setListOrder(response.data);
-    };
-    initData();
-  }, []);
-  const handleNavToEdit = () => {
-    return navigation.push('OngoingEdit');
+  useFocusEffect(
+    useCallback(() => {
+      const initData = async () => {
+        const response = await ReqOnProcessOrderList();
+
+        setListOrder(response.data);
+      };
+      initData();
+    }, []),
+  );
+
+  const handleNavToEdit = item => {
+    return navigation.push('OngoingEdit', {item});
   };
 
   const handleNavToDetail = item => {
@@ -131,7 +136,7 @@ export default function OngoingOrder({navigation}) {
                     color={'bg-green-500'}
                     text={'Edit'}
                     height={'2'}
-                    onPress={() => handleNavToEdit()}
+                    onPress={() => handleNavToEdit(item)}
                   />
                 </View>
               </View>

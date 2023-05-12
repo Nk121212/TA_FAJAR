@@ -5,6 +5,7 @@ import CoreRoutes from './routes/Core.route';
 import {StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
 import store from './config/redux/Store.redux';
+import 'moment/locale/id';
 
 function App() {
   return (

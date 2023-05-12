@@ -1,4 +1,12 @@
-import {FlatList, SafeAreaView, Text, TextInput, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  SafeAreaView,
+  Text,
+  TextInput,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import TopBar from '../components/organisms/TopBar.organism';
 import Spacer from '../components/atoms/Spacer.atom';
 import Tailwind from '../libs/tailwinds/Tailwind.lib';
@@ -6,18 +14,81 @@ import {MagnifyingGlassIcon} from 'react-native-heroicons/outline';
 import Divider from '../components/atoms/Divider.atom';
 import CustomButton from '../components/molecules/CustomButton.molecule';
 import {useEffect, useState} from 'react';
-import {ReqWaitingOrdeList} from '../libs/fetchings/WaitListOrder.lib';
+import {
+  ReqDeleteOrder,
+  ReqSendOrder,
+  ReqWaitingOrdeList,
+} from '../libs/fetchings/WaitListOrder.lib';
+import LoadingFetch from '../components/organisms/LoadingFetch.organism';
 
 export default function WaitingOrder() {
   const [listOrder, setListOrder] = useState(null);
-  useEffect(() => {
-    const initData = async () => {
-      const response = await ReqWaitingOrdeList();
+  const [isLoading, setIsLoading] = useState(false);
 
-      setListOrder(response.data);
-    };
+  const initData = async () => {
+    const response = await ReqWaitingOrdeList();
+
+    setListOrder(response.data);
+  };
+
+  useEffect(() => {
     initData();
   }, []);
+
+  const onDelete = async id => {
+    setIsLoading(true);
+    const response = await ReqDeleteOrder(id);
+    if (response && response?.status) {
+      ToastAndroid.show(response?.message, 2000);
+      await initData();
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+  };
+
+  const onSend = async id => {
+    setIsLoading(true);
+    const response = await ReqSendOrder(id);
+    if (response && response?.status) {
+      ToastAndroid.show(response?.message, 2000);
+      await initData();
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = id => {
+    Alert.alert(
+      'Konfirmasi Hapus Pesanan',
+      'Apakah Anda ingin menghapus pesanan ini?',
+      [
+        {text: 'Batal', onPress: () => console.log('Batal Hapus')},
+        {
+          text: 'Hapus',
+          onPress: () => onDelete(id),
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
+  const handleSent = id => {
+    Alert.alert(
+      'Konfirmasi Kirim Pesanan',
+      'Apakah Anda ingin mengirim pesanan ini?',
+      [
+        {text: 'Batal', onPress: () => console.log('Batal Kirim')},
+        {
+          text: 'Kirim',
+          onPress: () => onSend(id),
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
   return (
     <SafeAreaView style={Tailwind`w-full h-full`}>
       <TopBar title={'Pesanan Tunggu'} subTitle={'Administrator'} />
@@ -102,13 +173,13 @@ export default function WaitingOrder() {
                     color={'bg-red-500'}
                     text={'Hapus'}
                     height={'2'}
-                    onPress={() => {}}
+                    onPress={() => handleDelete(item?.id_penjualan)}
                   />
                   <CustomButton
                     color={'bg-green-500'}
                     text={'Kirim'}
                     height={'2'}
-                    onPress={() => {}}
+                    onPress={() => handleSent(item?.id_penjualan)}
                   />
                 </View>
               </View>
@@ -117,6 +188,7 @@ export default function WaitingOrder() {
         </View>
       </View>
       {/* Content Start --- */}
+      {isLoading && <LoadingFetch />}
     </SafeAreaView>
   );
 }
