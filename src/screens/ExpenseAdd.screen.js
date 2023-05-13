@@ -1,11 +1,40 @@
-import {SafeAreaView, View, Text, ScrollView, TextInput} from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  ScrollView,
+  TextInput,
+  ToastAndroid,
+} from 'react-native';
 import TopBar from '../components/organisms/TopBar.organism';
 import BottomNavbar from '../components/organisms/BottomNavbar.organism';
 import Tailwind from '../libs/tailwinds/Tailwind.lib';
 import Spacer from '../components/atoms/Spacer.atom';
 import CustomButton from '../components/molecules/CustomButton.molecule';
+import {useState} from 'react';
+import {ReqAddExpense} from '../libs/fetchings/Expense.lib';
+import LoadingFetch from '../components/organisms/LoadingFetch.organism';
+import CustomButtonNoFlex from '../components/molecules/CustomButtonNoFlex.molecule';
 
-export default function ExpenseAdd() {
+export default function ExpenseAdd({navigation}) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [form, setForm] = useState({
+    deskripsi: '',
+    nominal: '',
+  });
+
+  const handleSimpan = async () => {
+    setIsLoading(true);
+    const response = await ReqAddExpense(form.deskripsi, Number(form.nominal));
+
+    if (response) {
+      navigation.goBack();
+      ToastAndroid.show('Data berhasil disimpan', 2000);
+    } else {
+      ToastAndroid.show('Terjadi Kesalahan', 2000);
+    }
+    setIsLoading(false);
+  };
   return (
     <SafeAreaView style={Tailwind`w-full h-full`}>
       <TopBar title={'Tambah'} subTitle={'Administartor'} />
@@ -25,7 +54,10 @@ export default function ExpenseAdd() {
             style={Tailwind`font-gothic--regular text-sm text-gray-900 border border-gray-300 p-3 rounded-md`}
             numberOfLines={5}
             multiline
+            value={form.deskripsi}
+            onChangeText={text => setForm(prev => ({...prev, deskripsi: text}))}
           />
+
           <Text
             style={Tailwind`font-gothic--regular text-sm text-primary--purple mt-6 mb-3`}>
             Nominal
@@ -42,18 +74,21 @@ export default function ExpenseAdd() {
               maxLength={9}
               style={Tailwind`font-gothic--regular text-sm text-gray-900 flex-1`}
               keyboardType="number-pad"
+              value={form.nominal.toString()}
+              onChangeText={text => setForm(prev => ({...prev, nominal: text}))}
             />
           </View>
 
           <View style={Tailwind`mt-8`}>
-            <CustomButton
+            <CustomButtonNoFlex
               color={'bg-primary--purple'}
               text={'Simpan'}
-              onPress={() => {}}
+              onPress={() => handleSimpan()}
             />
           </View>
         </View>
       </ScrollView>
+      {isLoading && <LoadingFetch />}
     </SafeAreaView>
   );
 }

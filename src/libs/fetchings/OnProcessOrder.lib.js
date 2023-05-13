@@ -77,9 +77,7 @@ export const ReqUpdateOrder = async (
   } catch (err) {
     console.log('err__ReqUpdateOrder', err);
     ToastAndroid.show(
-      err?.response?.data?.message
-        ? err?.response?.data?.message
-        : 'Network Error',
+      err?.response?.data?.message ? 'Update pesanan gagal' : 'Network Error',
       2000,
     );
     return err?.response?.data;

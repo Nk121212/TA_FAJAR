@@ -5,6 +5,7 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import TopBar from '../components/organisms/TopBar.organism';
 import Tailwind from '../libs/tailwinds/Tailwind.lib';
@@ -61,14 +62,11 @@ export default function OngoingEdit({route, navigation}) {
       startDate.toISOString().toString().substring(0, 10),
       finishDate.toISOString().toString().substring(0, 10),
     );
-    console.log(
-      rItem.id,
-      id_status,
-      employee.id,
-      startDate.toISOString().toString().substring(0, 10),
-      finishDate.toISOString().toString().substring(0, 10),
-    );
-    navigation.goBack();
+
+    if (response && response?.result) {
+      navigation.goBack();
+      ToastAndroid.show('Perubahan berhasil disimpan', 2000);
+    }
     setIsLoading(false);
   };
   return (

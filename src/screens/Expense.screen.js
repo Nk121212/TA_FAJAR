@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   FlatList,
   TouchableHighlight,
+  Alert,
+  ToastAndroid,
 } from 'react-native';
 import TopBar from '../components/organisms/TopBar.organism';
 import BottomNavbar from '../components/organisms/BottomNavbar.organism';
 import Tailwind from '../libs/tailwinds/Tailwind.lib';
 import Spacer from '../components/atoms/Spacer.atom';
-import {Fragment, useState} from 'react';
+import {Fragment, useCallback, useEffect, useState} from 'react';
 import {
   CalendarDaysIcon,
   ChevronDownIcon,
@@ -19,22 +21,88 @@ import {
   PlusIcon,
 } from 'react-native-heroicons/outline';
 import CustomButton from '../components/molecules/CustomButton.molecule';
+import {useSelector} from 'react-redux';
+import {
+  ReqDeleteExpenseById,
+  ReqGetExpenseByDate,
+  ReqGetExpenseUntillToday,
+} from '../libs/fetchings/Expense.lib';
+import {ToRupiah} from '../helper/NumberFormat.lib';
+import moment from 'moment';
+import {useFocusEffect} from '@react-navigation/native';
+import LoadingFetch from '../components/organisms/LoadingFetch.organism';
 
 export default function Expense({navigation}) {
+  const user = useSelector(state => state.auth.user);
+  const [isLoading, setIsLoading] = useState(false);
   const [showFilter, setShowFilter] = useState(true);
+  const [expemseToday, setExpenseToday] = useState('0');
+  const [expenseList, setExpenseList] = useState(null);
 
-  const handleNavToEdit = () => {
-    return navigation.push('ExpenseEdit');
+  const initData = async () => {
+    setIsLoading(true);
+    const response = await ReqGetExpenseUntillToday();
+
+    setExpenseToday(response?.data?.total_pengeluaran);
+    setIsLoading(false);
+  };
+
+  const handleNavToEdit = id => {
+    return navigation.push('ExpenseEdit', {id});
   };
   const handleNavToAdd = () => {
     return navigation.push('ExpenseAdd');
   };
 
-  const handleDelete = () => {};
+  const handleSearch = async () => {
+    setIsLoading(true);
+    const respExpByDate = await ReqGetExpenseByDate();
 
+    setExpenseList(respExpByDate?.data);
+    setIsLoading(false);
+  };
+
+  const onDelete = async id => {
+    setIsLoading(true);
+    const response = await ReqDeleteExpenseById(id);
+    if (response) {
+      ToastAndroid.show('Data berhasil dihapus', 2000);
+      await initData();
+      await handleSearch();
+      setIsLoading(false);
+    } else {
+      ToastAndroid.show('Data gagal dihapus', 2000);
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = id => {
+    Alert.alert(
+      'Konfirmasi Hapus Pengeluaran',
+      'Apakah Anda ingin menghapus pengeluaran ini?',
+      [
+        {text: 'Batal', onPress: () => console.log('Batal Hapus')},
+        {
+          text: 'Hapus',
+          onPress: () => onDelete(id),
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setExpenseList(null);
+      initData();
+    }, []),
+  );
   return (
     <SafeAreaView style={Tailwind`w-full h-full`}>
-      <TopBar title={'Pengeluaran'} subTitle={'Administrator'} />
+      <TopBar
+        title={'Pengeluaran'}
+        subTitle={user.level === 1 ? 'Administrator' : 'Pegawai'}
+      />
       <View style={Tailwind`flex-1 px-6`}>
         <Spacer height={'18'} width={'full'} />
 
@@ -47,7 +115,7 @@ export default function Expense({navigation}) {
           <View style={Tailwind`bg-white py-2 px-3 rounded-md`}>
             <Text
               style={Tailwind`font-gothic--medium text-sm text-primary--purple`}>
-              Rp 120.000
+              Rp{ToRupiah(expemseToday)}
             </Text>
           </View>
         </View>
@@ -138,7 +206,7 @@ export default function Expense({navigation}) {
                     color={'bg-primary--purple'}
                     text={'Cari'}
                     height={'2'}
-                    onPress={() => {}}
+                    onPress={() => handleSearch()}
                   />
                 </View>
               </Fragment>
@@ -148,7 +216,7 @@ export default function Expense({navigation}) {
 
         <View style={Tailwind`flex-1 mt-4`}>
           <FlatList
-            data={[...Array(5)].fill('*')}
+            data={expenseList}
             keyExtractor={(item, index) => index}
             nestedScrollEnabled
             ListFooterComponent={() => <Spacer height={'6'} width={'full'} />}
@@ -160,7 +228,7 @@ export default function Expense({navigation}) {
                 <View style={Tailwind`bg-primary--purple/10 rounded-md py-2`}>
                   <Text
                     style={Tailwind`font-gothic--semibold text-sm text-primary--purple text-center`}>
-                    10 April 2023
+                    {moment(item?.created_at).format('LL')}
                   </Text>
                 </View>
                 <View
@@ -171,8 +239,7 @@ export default function Expense({navigation}) {
                   </Text>
                   <Text
                     style={Tailwind`font-gothic--regular text-sm text-gray-900`}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Quisque at erat arcu. Vivamus egestas tincidunt sodales.
+                    {item?.deskripsi || '-'}
                   </Text>
                 </View>
                 <View
@@ -183,7 +250,7 @@ export default function Expense({navigation}) {
                   </Text>
                   <Text
                     style={Tailwind`font-gothic--semibold text-lg text-gray-900`}>
-                    Rp 120.000
+                    Rp{ToRupiah(item?.nominal || '-')}
                   </Text>
                 </View>
                 <View style={Tailwind`flex-row gap-2 mt-3`}>
@@ -191,13 +258,13 @@ export default function Expense({navigation}) {
                     color={'bg-red-500'}
                     text={'Hapus'}
                     height={2}
-                    onPress={() => {}}
+                    onPress={() => handleDelete(item?.id_pengeluaran)}
                   />
                   <CustomButton
                     color={'bg-green-500'}
                     text={'Edit'}
                     height={2}
-                    onPress={() => handleNavToEdit()}
+                    onPress={() => handleNavToEdit(item?.id_pengeluaran)}
                   />
                 </View>
               </View>
@@ -206,6 +273,7 @@ export default function Expense({navigation}) {
         </View>
         {/* Content End --- */}
       </View>
+      {isLoading && <LoadingFetch />}
     </SafeAreaView>
   );
 }
