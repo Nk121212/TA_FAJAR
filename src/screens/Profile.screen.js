@@ -38,6 +38,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 
 export default function Profile({navigation}) {
   const dispatch = useDispatch();
+  const auth = useSelector(state => state.auth.user);
   const [isEdit, setIsEdit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingLogout, setIsLoadingLogout] = useState(false);
@@ -159,7 +160,11 @@ export default function Profile({navigation}) {
   };
   return (
     <SafeAreaView style={Tailwind`min-w-full min-h-full`}>
-      <TopBar title={'Profil'} subTitle={'Adminisatrator'} showGoBack={false} />
+      <TopBar
+        title={'Profil'}
+        showGoBack={false}
+        subTitle={auth.level === 1 ? 'Administrator' : 'Pegawai'}
+      />
       <ScrollView>
         <Spacer height={'18'} width={'full'} />
         {/* Content Start --- */}

@@ -141,7 +141,7 @@ export default function OngoingEdit({route, navigation}) {
                 show={'name'}
                 disabled={user.level === 2}
                 defaultButtonText="Pilih Pegawai"
-                defaultValue={employee}
+                defaultValue={user.level === 2 ? employee : null}
                 onSelect={v => console.log(v)}
               />
             </View>

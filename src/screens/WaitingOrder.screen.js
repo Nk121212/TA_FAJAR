@@ -96,7 +96,7 @@ export default function WaitingOrder() {
 
       {/* Content Start --- */}
       <View style={Tailwind`px-6 mt-4 flex-1`}>
-        <View
+        {/* <View
           style={Tailwind`flex-row items-center gap-2 bg-white rounded-md px-3 shadow`}>
           <MagnifyingGlassIcon style={Tailwind`text-gray-400`} />
           <TextInput
@@ -104,7 +104,7 @@ export default function WaitingOrder() {
             placeholderTextColor={'#10101040'}
             style={Tailwind`font-gothic--regular text-sm text-gray-900 flex-1`}
           />
-        </View>
+        </View> */}
 
         <View style={Tailwind``}>
           <FlatList

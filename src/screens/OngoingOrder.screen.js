@@ -8,8 +8,10 @@ import CustomButton from '../components/molecules/CustomButton.molecule';
 import {useCallback, useEffect, useState} from 'react';
 import {ReqOnProcessOrderList} from '../libs/fetchings/OnProcessOrder.lib';
 import {useFocusEffect} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 export default function OngoingOrder({navigation}) {
+  const user = useSelector(state => state.auth.user);
   const [listOrder, setListOrder] = useState(null);
 
   useFocusEffect(
@@ -33,12 +35,15 @@ export default function OngoingOrder({navigation}) {
 
   return (
     <SafeAreaView style={Tailwind`w-full h-full`}>
-      <TopBar title={'Pesanan Berjalan'} subTitle={'Administrator'} />
+      <TopBar
+        title={'Pesanan Berjalan'}
+        subTitle={user.level === 1 ? 'Administrator' : 'Pegawai'}
+      />
       <Spacer height={'18'} width={'full'} />
 
       {/* Content Start --- */}
       <View style={Tailwind`px-6 mt-4 flex-1`}>
-        <View
+        {/* <View
           style={Tailwind`flex-row items-center gap-2 bg-white rounded-md px-3 shadow`}>
           <MagnifyingGlassIcon style={Tailwind`text-gray-400`} />
           <TextInput
@@ -46,7 +51,7 @@ export default function OngoingOrder({navigation}) {
             placeholderTextColor={'#10101040'}
             style={Tailwind`font-gothic--regular text-sm text-gray-900 flex-1`}
           />
-        </View>
+        </View> */}
 
         <View style={Tailwind``}>
           <FlatList

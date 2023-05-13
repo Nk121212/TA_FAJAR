@@ -54,7 +54,11 @@ export default function Transaction({navigation}) {
   }, []);
   return (
     <SafeAreaView style={Tailwind`min-w-full min-h-full`}>
-      <TopBar showGoBack={false} title={'Transaksi'} subTitle="Administrator" />
+      <TopBar
+        showGoBack={false}
+        title={'Transaksi'}
+        subTitle={user.level === 1 ? 'Administrator' : 'Pegawai'}
+      />
       <View style={Tailwind`flex-1 px-6`}>
         <ScrollView>
           <Spacer height={'18'} width={'full'} />

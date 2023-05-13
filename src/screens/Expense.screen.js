@@ -31,6 +31,7 @@ import {ToRupiah} from '../helper/NumberFormat.lib';
 import moment from 'moment';
 import {useFocusEffect} from '@react-navigation/native';
 import LoadingFetch from '../components/organisms/LoadingFetch.organism';
+import DatePicker from 'react-native-date-picker';
 
 export default function Expense({navigation}) {
   const user = useSelector(state => state.auth.user);
@@ -38,6 +39,16 @@ export default function Expense({navigation}) {
   const [showFilter, setShowFilter] = useState(true);
   const [expemseToday, setExpenseToday] = useState('0');
   const [expenseList, setExpenseList] = useState(null);
+
+  const [startDate, setStartDate] = useState(() => {
+    let date = new Date();
+    date.setDate(1);
+    return date;
+  });
+
+  const [endDate, setEndDate] = useState(new Date());
+  const [openStartDate, setOpenStartDate] = useState(false);
+  const [openEndDate, setOpenEndDate] = useState(false);
 
   const initData = async () => {
     setIsLoading(true);
@@ -59,6 +70,7 @@ export default function Expense({navigation}) {
     const respExpByDate = await ReqGetExpenseByDate();
 
     setExpenseList(respExpByDate?.data);
+
     setIsLoading(false);
   };
 
@@ -93,8 +105,8 @@ export default function Expense({navigation}) {
 
   useFocusEffect(
     useCallback(() => {
-      setExpenseList(null);
       initData();
+      setExpenseList(null);
     }, []),
   );
   return (
@@ -134,7 +146,8 @@ export default function Expense({navigation}) {
                   }`}>
                   <Text
                     style={Tailwind`font-gothic--regular text-primary--purple text-xs`}>
-                    10 April 2023 - 20 April 2023
+                    {moment(startDate)?.format('LL')} -{' '}
+                    {moment(endDate)?.format('LL')}
                   </Text>
                 </View>
               </View>
@@ -155,11 +168,12 @@ export default function Expense({navigation}) {
                 <View style={Tailwind`flex-row items-center gap-1 mt-2`}>
                   <TouchableOpacity
                     activeOpacity={0.5}
+                    onPress={() => setOpenStartDate(true)}
                     style={Tailwind`flex-1 flex-row items-center justify-between border border-gray-300 p-3 rounded-md`}>
                     <Fragment>
                       <Text
                         style={Tailwind`flex-1 font-gothic--semibold text-sm text-black`}>
-                        2023-03-22
+                        {moment(startDate)?.format('ll')}
                       </Text>
                       <CalendarDaysIcon
                         style={Tailwind`text-primary--purple`}
@@ -173,11 +187,12 @@ export default function Expense({navigation}) {
                   </Text>
                   <TouchableOpacity
                     activeOpacity={0.5}
+                    onPress={() => setOpenEndDate(true)}
                     style={Tailwind`flex-1 flex-row items-center justify-between border border-gray-300 p-3 rounded-md`}>
                     <Fragment>
                       <Text
                         style={Tailwind`flex-1 font-gothic--semibold text-sm text-black`}>
-                        Akhir
+                        {moment(endDate)?.format('ll')}
                       </Text>
                       <CalendarDaysIcon
                         style={Tailwind`text-primary--purple`}
@@ -254,12 +269,14 @@ export default function Expense({navigation}) {
                   </Text>
                 </View>
                 <View style={Tailwind`flex-row gap-2 mt-3`}>
-                  <CustomButton
-                    color={'bg-red-500'}
-                    text={'Hapus'}
-                    height={2}
-                    onPress={() => handleDelete(item?.id_pengeluaran)}
-                  />
+                  {user.level === 1 && (
+                    <CustomButton
+                      color={'bg-red-500'}
+                      text={'Hapus'}
+                      height={2}
+                      onPress={() => handleDelete(item?.id_pengeluaran)}
+                    />
+                  )}
                   <CustomButton
                     color={'bg-green-500'}
                     text={'Edit'}
@@ -274,6 +291,34 @@ export default function Expense({navigation}) {
         {/* Content End --- */}
       </View>
       {isLoading && <LoadingFetch />}
+
+      <DatePicker
+        modal
+        mode="date"
+        open={openStartDate}
+        date={startDate}
+        onConfirm={date => {
+          setOpenStartDate(false);
+          setStartDate(date);
+        }}
+        onCancel={() => {
+          setOpenStartDate(false);
+        }}
+      />
+
+      <DatePicker
+        modal
+        mode="date"
+        open={openEndDate}
+        date={endDate}
+        onConfirm={date => {
+          setOpenEndDate(false);
+          setEndDate(date);
+        }}
+        onCancel={() => {
+          setOpenEndDate(false);
+        }}
+      />
     </SafeAreaView>
   );
 }
