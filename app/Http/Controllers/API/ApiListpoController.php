@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Listpo;
 use App\Models\Status;
 use App\Models\Penjualan;
+use App\Models\ApiAssigne;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -137,12 +138,28 @@ class ApiListpoController extends Controller
      */
     public function show($id)
     {
-        $assigne = User::where('id', '!=', 1)->pluck('name', 'id')->all();
+        // $assigne = User::where('id', '!=', 1)->pluck('name', 'id')->all();
+        $assigne = ApiAssigne::select('id', 'name')->where('id', '!=', 1)->get();
         $status = Status::all();
         $listpo = Listpo::find($id);
         $user_input = User::where('id', $listpo['id_user'])->pluck('name')->all();
 
         return response()->json(['list' => $listpo, 'assigne' => $assigne, 'status' => $status, 'user_input' => $user_input]);
+    }
+
+    public function pegawai()
+    {
+        // $assigne = User::where('id', '!=', 1)->pluck('name', 'id')->all();
+        $pegawai = ApiAssigne::select('id', 'name')->where('id', '!=', 1)->get();
+        // $status = Status::all();
+        // $listpo = Listpo::find($id);
+        // $user_input = User::where('id', $listpo['id_user'])->pluck('name')->all();
+
+        return response()->json([
+            'response' => true,
+            'data' => $pegawai,
+            'total_data' => $pegawai->count()
+        ]);
     }
 
     /**
