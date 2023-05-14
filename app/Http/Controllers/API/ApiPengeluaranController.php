@@ -17,7 +17,10 @@ class ApiPengeluaranController extends Controller
     public function data_by_date(Request $request)
     {
         //
-        $pengeluaran = Pengeluaran::where('created_at', '>=', '2023-04-10 00:00:00')->where('created_at', '<=', '2023-05-10 23:59:59')->get();
+        $from = $request->tanggal_awal;
+        $to = $request->tanggal_akhir;
+
+        $pengeluaran = Pengeluaran::where('created_at', '>=', $from.' 00:00:00')->where('created_at', '<=', $to.' 23:59:59')->get();
 
         return response()->json([
             'status' => true,
