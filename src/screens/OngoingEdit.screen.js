@@ -71,15 +71,7 @@ export default function OngoingEdit({route, navigation}) {
       rItem.id,
       id_status,
       user.id,
-      employee.id,
-      startDate.toISOString().toString().substring(0, 10),
-      finishDate.toISOString().toString().substring(0, 10),
-    );
-    console.log(
-      rItem.id,
-      id_status,
-      user.id,
-      employee.id,
+      employee ? employee.id : user.penugasan,
       startDate.toISOString().toString().substring(0, 10),
       finishDate.toISOString().toString().substring(0, 10),
     );

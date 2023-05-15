@@ -67,7 +67,10 @@ export default function Expense({navigation}) {
 
   const handleSearch = async () => {
     setIsLoading(true);
-    const respExpByDate = await ReqGetExpenseByDate();
+    const respExpByDate = await ReqGetExpenseByDate(
+      startDate.toISOString().substring(0, 10),
+      endDate.toISOString().substring(0, 10),
+    );
 
     setExpenseList(respExpByDate?.data);
 

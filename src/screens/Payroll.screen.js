@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -27,6 +27,7 @@ import CustomButtonNoFlex from '../components/molecules/CustomButtonNoFlex.molec
 import {ReqGetPayrollList} from '../libs/fetchings/Payroll.lib';
 import LoadingFetch from '../components/organisms/LoadingFetch.organism';
 import {ToRupiah} from '../helper/NumberFormat.lib';
+import {ReqGetPegawailList} from '../libs/fetchings/Pegawai.lib';
 
 const countries = ['Egypt', 'Canada', 'Australia', 'Ireland'];
 
@@ -36,20 +37,7 @@ export default function Payroll() {
   const [isSettedDate, setIsSettedDate] = useState(false);
   const [isExist, setIsExist] = useState(false);
   const [listData, setListData] = useState(null);
-  const [listEmployee, setListEmployee] = useState([
-    {
-      id: 2,
-      nama: 'asep update',
-    },
-    {
-      id: 3,
-      nama: 'Deviana Amartha',
-    },
-    {
-      id: 4,
-      nama: 'Ikbal Daud',
-    },
-  ]);
+  const [listEmployee, setListEmployee] = useState(null);
 
   const [selectedEmployee, setSelectedEmployee] = useState({
     id: user.id,
@@ -65,6 +53,16 @@ export default function Payroll() {
   const [endDate, setEndDate] = useState(new Date());
   const [openStartDate, setOpenStartDate] = useState(false);
   const [openEndDate, setOpenEndDate] = useState(false);
+
+  const initData = async () => {
+    if (user.level === 1) {
+      setIsLoading(true);
+      const response = await ReqGetPegawailList();
+
+      setListEmployee(response?.data);
+      setIsLoading(false);
+    }
+  };
 
   const handleSearch = async () => {
     const assigne = selectedEmployee?.id;
@@ -92,6 +90,10 @@ export default function Payroll() {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    initData();
+  }, []);
+
   return (
     <SafeAreaView style={Tailwind`w-full h-full`}>
       <TopBar title={'Penggajian'} subTitle={'Administrator'} />
@@ -108,7 +110,7 @@ export default function Payroll() {
 
                 <CustomDropdown
                   data={listEmployee}
-                  show={'nama'}
+                  show={'name'}
                   disabled={user.level === 2}
                   defaultButtonText="Pilih Pegawai"
                   defaultValue={user.level === 2 ? selectedEmployee : null}

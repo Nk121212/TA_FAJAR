@@ -66,11 +66,10 @@ export default function DetailOrder({route}) {
             title={'Harga'}
             value={`Rp${ToRupiah(product?.harga_bayar)}`}
           />
-          <TextCols title={'Jumlah Item'} value={product?.total_item} />
           <TextCols title={'DIskon'} value={`${product?.diskon}%`} />
           <TextCols
             title={'Total Biaya'}
-            value={`Rp${ToRupiah(product?.total_harga)}`}
+            value={`Rp${ToRupiah(product?.harga_bayar)}`}
           />
           <TextCols
             title={'Sumber'}
