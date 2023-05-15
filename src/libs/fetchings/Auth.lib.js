@@ -42,7 +42,7 @@ export const ReqLogout = async () => {
 
     return response?.data;
   } catch (err) {
-    console.log('err__RequestLogin', err);
+    console.log('err__ReqLogout', err);
     ToastAndroid.show(
       err?.response?.data?.message
         ? err?.response?.data?.message
