@@ -16,7 +16,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from 'react-native-heroicons/outline';
-import {Fragment, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import CustomButton from '../components/molecules/CustomButton.molecule';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
@@ -26,6 +26,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import CustomDropdown from '../components/organisms/CustomDropdown.organism';
 import {ReqUpdateOrder} from '../libs/fetchings/OnProcessOrder.lib';
 import LoadingFetch from '../components/organisms/LoadingFetch.organism';
+import {ReqGetPegawailList} from '../libs/fetchings/Pegawai.lib';
 
 export default function OngoingEdit({route, navigation}) {
   const rItem = route?.params?.item;
@@ -41,6 +42,7 @@ export default function OngoingEdit({route, navigation}) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  const [listEmployee, setListEmployee] = useState(null);
   const [employee, setEmployee] = useState(() => {
     if (user.level === 2) {
       return {
@@ -52,12 +54,31 @@ export default function OngoingEdit({route, navigation}) {
     }
   });
 
+  const initData = async () => {
+    if (user.level === 1) {
+      setIsLoading(true);
+      const response = await ReqGetPegawailList();
+
+      setListEmployee(response?.data);
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     setIsLoading(true);
     const id_status = status ? status?.status_id : rItem.status_penjualan;
     const response = await ReqUpdateOrder(
       rItem.id,
       id_status,
+      user.id,
+      employee.id,
+      startDate.toISOString().toString().substring(0, 10),
+      finishDate.toISOString().toString().substring(0, 10),
+    );
+    console.log(
+      rItem.id,
+      id_status,
+      user.id,
       employee.id,
       startDate.toISOString().toString().substring(0, 10),
       finishDate.toISOString().toString().substring(0, 10),
@@ -69,6 +90,11 @@ export default function OngoingEdit({route, navigation}) {
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    initData();
+  }, []);
+
   return (
     <SafeAreaView style={Tailwind`w-full h-full`}>
       <TopBar
@@ -137,12 +163,12 @@ export default function OngoingEdit({route, navigation}) {
                 Pegawai
               </Text>
               <CustomDropdown
-                data={[employee]}
+                data={user.level === 1 ? listEmployee : [employee]}
                 show={'name'}
                 disabled={user.level === 2}
                 defaultButtonText="Pilih Pegawai"
                 defaultValue={user.level === 2 ? employee : null}
-                onSelect={v => console.log(v)}
+                onSelect={v => setEmployee(v)}
               />
             </View>
             <View style={Tailwind`flex-col gap-2`}>

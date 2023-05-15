@@ -54,6 +54,7 @@ export const ReqUpdateOrder = async (
   id,
   id_statuses,
   id_user,
+  assigne,
   start_date,
   end_date,
 ) => {
@@ -68,6 +69,7 @@ export const ReqUpdateOrder = async (
       params: {
         id_statuses,
         id_user,
+        assigne,
         start_date,
         end_date,
       },
