@@ -41,7 +41,7 @@ export default function Payroll() {
 
   const [selectedEmployee, setSelectedEmployee] = useState({
     id: user.id,
-    nama: user.name,
+    name: user.name,
   });
 
   const [startDate, setStartDate] = useState(() => {
@@ -96,7 +96,10 @@ export default function Payroll() {
 
   return (
     <SafeAreaView style={Tailwind`w-full h-full`}>
-      <TopBar title={'Penggajian'} subTitle={'Administrator'} />
+      <TopBar
+        title={'Penggajian'}
+        subTitle={user.level === 1 ? 'Administrator' : 'Pegawai'}
+      />
       <View style={Tailwind`flex-1`}>
         <ScrollView>
           <Spacer height={'18'} width={'full'} />
@@ -109,7 +112,7 @@ export default function Payroll() {
                 </Text>
 
                 <CustomDropdown
-                  data={listEmployee}
+                  data={user.level == 1 ? listEmployee : [selectedEmployee]}
                   show={'name'}
                   disabled={user.level === 2}
                   defaultButtonText="Pilih Pegawai"
