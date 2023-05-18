@@ -63,10 +63,12 @@ export default function OngoingEdit({route, navigation}) {
       setIsLoading(false);
     }
   };
-
+  console.log(rItem);
   const handleSubmit = async () => {
     setIsLoading(true);
-    const id_status = status ? status?.status_id : rItem.status_penjualan;
+    const id_status = status
+      ? status?.status_id
+      : STATUS_ORDER.find(v => v.name == rItem.status).status_id;
     const response = await ReqUpdateOrder(
       rItem.id,
       id_status,
@@ -159,7 +161,15 @@ export default function OngoingEdit({route, navigation}) {
                 show={'name'}
                 disabled={user.level === 2}
                 defaultButtonText="Pilih Pegawai"
-                defaultValue={user.level === 2 ? employee : null}
+                defaultValue={
+                  employee
+                    ? employee
+                    : {
+                        id: Number(rItem.penugasan),
+                        name: rItem.pegawai,
+                      }
+                }
+                value={employee}
                 onSelect={v => setEmployee(v)}
               />
             </View>

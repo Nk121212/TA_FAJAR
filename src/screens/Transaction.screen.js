@@ -63,18 +63,21 @@ export default function Transaction({navigation}) {
         <ScrollView>
           <Spacer height={'18'} width={'full'} />
 
-          <View
-            style={Tailwind`bg-primary--purple rounded-lg flex-row items-center justify-between p-3 mt-4 `}>
-            <Text style={Tailwind`font-gothic--semibold text-sm text-white`}>
-              Pendapatan Bersih
-            </Text>
-            <View style={Tailwind`bg-white py-2 px-3 rounded-md`}>
-              <Text
-                style={Tailwind`font-gothic--medium text-sm text-primary--purple`}>
-                Rp{income || 0}
+          {user.level == 1 && (
+            <View
+              style={Tailwind`bg-primary--purple rounded-lg flex-row items-center justify-between p-3 mt-4 `}>
+              <Text style={Tailwind`font-gothic--semibold text-sm text-white`}>
+                Pendapatan Bersih
               </Text>
+              <View style={Tailwind`bg-white py-2 px-3 rounded-md`}>
+                <Text
+                  style={Tailwind`font-gothic--medium text-sm text-primary--purple`}>
+                  Rp{income || 0}
+                </Text>
+              </View>
             </View>
-          </View>
+          )}
+
           <CardItem
             hide={user.level !== 1 ? true : false}
             icon={

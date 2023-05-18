@@ -109,6 +109,7 @@ export default function Expense({navigation}) {
   useFocusEffect(
     useCallback(() => {
       initData();
+      handleSearch();
       setExpenseList(null);
     }, []),
   );

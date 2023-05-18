@@ -31,15 +31,17 @@ export default function PortalCheck() {
   });
 
   const handleSearch = async () => {
-    if (form.kode_produk == '' || form.nama_produk == '') {
+    if (form.kode_produk == '' && form.nama_produk == '') {
       return ToastAndroid.show('Masukan kode atau nama bahan.', 2000);
     }
     setIsLoading(true);
     const response = await ReqStokPortlet(form.kode_produk, form.nama_produk);
-    if (response && response?.result) {
+    if (response && response?.result && response.data[0] !== null) {
       setProduct(response?.data[0]);
       setIsExist(true);
     } else {
+      setProduct(null);
+      setIsExist(false);
       ToastAndroid.show('Data tidak ditemukan', 2000);
     }
     setIsLoading(false);

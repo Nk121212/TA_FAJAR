@@ -137,12 +137,14 @@ export default function OngoingOrder({navigation}) {
                     height={'2'}
                     onPress={() => handleNavToDetail(item)}
                   />
-                  <CustomButton
-                    color={'bg-green-500'}
-                    text={'Edit'}
-                    height={'2'}
-                    onPress={() => handleNavToEdit(item)}
-                  />
+                  {item.status !== 'selesai' && (
+                    <CustomButton
+                      color={'bg-green-500'}
+                      text={'Edit'}
+                      height={'2'}
+                      onPress={() => handleNavToEdit(item)}
+                    />
+                  )}
                 </View>
               </View>
             )}
