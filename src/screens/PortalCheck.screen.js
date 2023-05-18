@@ -56,7 +56,7 @@ export default function PortalCheck() {
       />
       <Spacer height={'18'} width={'full'} />
 
-      <View style={Tailwind`p-6`}>
+      <View style={Tailwind`p-6 flex-1`}>
         <View style={Tailwind`bg-white rounded-md p-3`}>
           <Text
             style={Tailwind`font-gothic--semibold text-sm text-primary--purple mb-2`}>
@@ -95,44 +95,47 @@ export default function PortalCheck() {
           </View>
         </View>
 
-        <View style={Tailwind`${isExist ? '' : 'hidden'}`}>
+        <View style={Tailwind`flex-1 ${isExist ? '' : 'hidden'}`}>
           <Text
             style={Tailwind`font-gothic--semibold text-sm text-primary--purple mt-4 mb-2`}>
             Hasil Pencarian
           </Text>
-          <FlatList
-            data={product}
-            keyExtractor={(item, index) => index}
-            ListFooterComponent={() => <Spacer height={'20'} width={'full'} />}
-            renderItem={({item, index}) => (
-              <View
-                style={Tailwind`bg-white rounded-md p-3 mt-4 border ${
-                  item?.stok < 3 ? 'border-red-500' : 'border-white'
-                } ${isExist ? '' : 'hidden'}`}>
-                <View style={Tailwind`px-3 bg-primary--purple/05 rounded my-3`}>
-                  <TextCols title="Kode" value={item?.kode_produk} />
-                  <TextCols title="Kategori" value={item?.nama_kategori} />
-                  <TextCols title="Nama" value={item?.nama_produk} />
-                  <TextCols title="Stok" value={item?.stok} />
-                  <TextCols
-                    title="Harga beli"
-                    value={`Rp${ToRupiah(item?.harga_beli)}`}
-                  />
-                </View>
-
-                {item?.stok < 3 && (
+          <View style={Tailwind`flex-1`}>
+            <FlatList
+              data={product}
+              keyExtractor={(item, index) => index}
+              ListFooterComponent={() => <Spacer height={'2'} width={'full'} />}
+              renderItem={({item, index}) => (
+                <View
+                  style={Tailwind`bg-white rounded-md p-3 mt-4 border ${
+                    item?.stok < 3 ? 'border-red-500' : 'border-white'
+                  } ${isExist ? '' : 'hidden'}`}>
                   <View
-                    style={Tailwind`flex-row items-center gap-1 bg-red-50 px-3 py-1 rounded-md`}>
-                    <InformationCircleIcon color={'red'} size={18} />
-                    <Text
-                      style={Tailwind`font-gothic--regular text-xs text-red-500`}>
-                      Stok harus lebih dari 3
-                    </Text>
+                    style={Tailwind`px-3 bg-primary--purple/05 rounded my-3`}>
+                    <TextCols title="Kode" value={item?.kode_produk} />
+                    <TextCols title="Kategori" value={item?.nama_kategori} />
+                    <TextCols title="Nama" value={item?.nama_produk} />
+                    <TextCols title="Stok" value={item?.stok} />
+                    <TextCols
+                      title="Harga beli"
+                      value={`Rp${ToRupiah(item?.harga_beli)}`}
+                    />
                   </View>
-                )}
-              </View>
-            )}
-          />
+
+                  {item?.stok < 3 && (
+                    <View
+                      style={Tailwind`flex-row items-center gap-1 bg-red-50 px-3 py-1 rounded-md`}>
+                      <InformationCircleIcon color={'red'} size={18} />
+                      <Text
+                        style={Tailwind`font-gothic--regular text-xs text-red-500`}>
+                        Stok harus lebih dari 3
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              )}
+            />
+          </View>
         </View>
       </View>
 
