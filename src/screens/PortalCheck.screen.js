@@ -5,6 +5,7 @@ import {
   ScrollView,
   TextInput,
   ToastAndroid,
+  FlatList,
 } from 'react-native';
 import TopBar from '../components/organisms/TopBar.organism';
 import BottomNavbar from '../components/organisms/BottomNavbar.organism';
@@ -37,7 +38,7 @@ export default function PortalCheck() {
     setIsLoading(true);
     const response = await ReqStokPortlet(form.kode_produk, form.nama_produk);
     if (response && response?.result && response.data[0] !== null) {
-      setProduct(response?.data[0]);
+      setProduct(response?.data);
       setIsExist(true);
     } else {
       setProduct(null);
@@ -94,35 +95,44 @@ export default function PortalCheck() {
           </View>
         </View>
 
-        <View
-          style={Tailwind`bg-white rounded-md p-3 mt-8 border ${
-            product?.stok < 3 ? 'border-red-500' : 'border-white'
-          } ${isExist ? '' : 'hidden'}`}>
+        <View style={Tailwind`${isExist ? '' : 'hidden'}`}>
           <Text
-            style={Tailwind`font-gothic--semibold text-sm text-primary--purple`}>
+            style={Tailwind`font-gothic--semibold text-sm text-primary--purple mt-4 mb-2`}>
             Hasil Pencarian
           </Text>
+          <FlatList
+            data={product}
+            keyExtractor={(item, index) => index}
+            ListFooterComponent={() => <Spacer height={'20'} width={'full'} />}
+            renderItem={({item, index}) => (
+              <View
+                style={Tailwind`bg-white rounded-md p-3 mt-4 border ${
+                  item?.stok < 3 ? 'border-red-500' : 'border-white'
+                } ${isExist ? '' : 'hidden'}`}>
+                <View style={Tailwind`px-3 bg-primary--purple/05 rounded my-3`}>
+                  <TextCols title="Kode" value={item?.kode_produk} />
+                  <TextCols title="Kategori" value={item?.nama_kategori} />
+                  <TextCols title="Nama" value={item?.nama_produk} />
+                  <TextCols title="Stok" value={item?.stok} />
+                  <TextCols
+                    title="Harga beli"
+                    value={`Rp${ToRupiah(item?.harga_beli)}`}
+                  />
+                </View>
 
-          <View style={Tailwind`px-3 bg-primary--purple/05 rounded my-3`}>
-            <TextCols title="Kode" value={product?.kode_produk} />
-            <TextCols title="Kategori" value={product?.nama_kategori} />
-            <TextCols title="Nama" value={product?.nama_produk} />
-            <TextCols title="Stok" value={product?.stok} />
-            <TextCols
-              title="Harga beli"
-              value={`Rp${ToRupiah(product?.harga_beli)}`}
-            />
-          </View>
-
-          {product?.stok < 3 && (
-            <View
-              style={Tailwind`flex-row items-center gap-1 bg-red-50 px-3 py-1 rounded-md`}>
-              <InformationCircleIcon color={'red'} size={18} />
-              <Text style={Tailwind`font-gothic--regular text-xs text-red-500`}>
-                Stok harus lebih dari 3
-              </Text>
-            </View>
-          )}
+                {item?.stok < 3 && (
+                  <View
+                    style={Tailwind`flex-row items-center gap-1 bg-red-50 px-3 py-1 rounded-md`}>
+                    <InformationCircleIcon color={'red'} size={18} />
+                    <Text
+                      style={Tailwind`font-gothic--regular text-xs text-red-500`}>
+                      Stok harus lebih dari 3
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
+          />
         </View>
       </View>
 
