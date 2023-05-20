@@ -45,6 +45,7 @@ export default function DetailOrder({route}) {
             </Text>
           </View>
           <TextCols title={'Produk'} value={product?.nama_catalog} />
+          <TextCols title={'Keterangan'} value={product?.keterangan} />
           <TextCols title={'Nama'} value={product?.nama_pemesan} />
           <TextCols title={'ID Member'} value={product?.id_member || '-'} />
           <TextCols title={'No. Telepon'} value={product?.telepon} />
@@ -58,23 +59,21 @@ export default function DetailOrder({route}) {
               DATA TRANSAKSI
             </Text>
           </View>
+          <TextCols title={'Nomor Pesanan'} value={`${product?.id_penjualan}`} />
+          <TextCols
+            title={'Sumber Pesanan'}
+            value={product?.sumber_po?.toUpperCase()}
+          />
           <TextCols
             title={'Tgl. Pesanan'}
             value={moment(product?.created_at)?.format('LLL')}
           />
           <TextCols
-            title={'Harga'}
-            value={`Rp${ToRupiah(product?.harga_bayar)}`}
+            title={'Total Pembayaran'}
+            value={`Rp ${ToRupiah(product?.harga_bayar)}`}
           />
-          <TextCols title={'DIskon'} value={`${product?.diskon}%`} />
-          <TextCols
-            title={'Total Biaya'}
-            value={`Rp${ToRupiah(product?.harga_bayar)}`}
-          />
-          <TextCols
-            title={'Sumber'}
-            value={product?.sumber_po?.toUpperCase()}
-          />
+          <TextCols title={'Penggunaan Bahan'} value={`${product?.total_item} Bahan`} />
+          
         </View>
         {/* Content End --- */}
         <Spacer height={'6'} width={'full'} />
