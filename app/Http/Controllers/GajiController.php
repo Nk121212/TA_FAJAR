@@ -26,8 +26,7 @@ class GajiController extends Controller
         $gaji = DB::table('list_po')
             ->join('users', 'users.id', '=', 'list_po.assigne')
             ->join('penggajian', 'list_po.id', '=', 'penggajian.id_list_po')
-            ->select('list_po.kode_po as kode', 'users.name as pegawai', 'list_po.updated_at as selesai',
-                'penggajian.harga as harga', 'penggajian.bonus as bonus',
+            ->select('list_po.kode_po as kode', 'list_po.id_penjualan as nopes', 'users.name as pegawai', 'list_po.updated_at as selesai', 'penggajian.harga as harga', 'penggajian.bonus as bonus',
                 DB::raw('penggajian.harga + penggajian.bonus as total'));
 
         $awal = isset($request->tanggal_awal) ? $request->tanggal_awal : '';
@@ -60,7 +59,7 @@ class GajiController extends Controller
                 if ($request->tanggal_awal <= $request->tanggal_akhir) {
                     $gaji = $gaji->where('list_po.id_statuses', '=', '3')
                         ->where('list_po.assigne', '=', Auth::user()->id)
-                        ->whereBetween('list_po.updated_at', [date($request->tanggal_awal), date($request->tanggal_akhir)]);
+                        ->whereBetween('list_po.updated_at', [$tgl_awal, $tgl_akhir]);
                 }
             } else {
                 $gaji = $gaji->where('list_po.id_statuses', '=', '3')

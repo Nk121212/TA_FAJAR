@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pembelian;
 use App\Models\Pengeluaran;
 use App\Models\Penjualan;
+use App\Models\Gaji;
 use Illuminate\Http\Request;
 use PDF;
 
@@ -37,8 +38,9 @@ class LaporanController extends Controller
             $total_penjualan = Penjualan::where('created_at', 'LIKE', "%$tanggal%")->sum('harga_bayar');
             $total_pembelian = Pembelian::where('created_at', 'LIKE', "%$tanggal%")->sum('bayar');
             $total_pengeluaran = Pengeluaran::where('created_at', 'LIKE', "%$tanggal%")->sum('nominal');
+            $total_gaji = Gaji::where('created_at', 'LIKE', "%$tanggal%")->sum('total');
 
-            $pendapatan = $total_penjualan - $total_pembelian - $total_pengeluaran;
+            $pendapatan = $total_penjualan - $total_pembelian - $total_pengeluaran - $total_gaji;
             $total_pendapatan += $pendapatan;
 
             $row = array();
@@ -47,6 +49,7 @@ class LaporanController extends Controller
             $row['penjualan'] = format_uang($total_penjualan);
             $row['pembelian'] = format_uang($total_pembelian);
             $row['pengeluaran'] = format_uang($total_pengeluaran);
+            $row['gaji'] = format_uang($total_gaji);
             $row['pendapatan'] = format_uang($pendapatan);
 
             $data[] = $row;
@@ -57,6 +60,7 @@ class LaporanController extends Controller
             'tanggal' => '',
             'penjualan' => '',
             'pembelian' => '',
+            'gaji' => '',
             'pengeluaran' => 'Total Pendapatan',
             'pendapatan' => format_uang($total_pendapatan),
         ];

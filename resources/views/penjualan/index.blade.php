@@ -20,6 +20,7 @@ Daftar Pesanan Tunggu
                         <th>Tanggal Pemesanan</th>
                         <th>No Pesanan</th>
                         <th>Produk</th>
+                        <th>Keterangan</th>
                         <th>Nama Pemesan</th>
                         <th>No Telepon</th>
                         <th>Alamat</th>
@@ -59,6 +60,7 @@ Daftar Pesanan Tunggu
                 {data: 'tanggal'},
                 {data: 'id_penjualan'}, 
                 {data: 'nama_catalog'},
+                {data: 'keterangan'},
                 {data: 'nama_pemesan'},
                 {data: 'telepon'},
                 {data: 'alamat'},

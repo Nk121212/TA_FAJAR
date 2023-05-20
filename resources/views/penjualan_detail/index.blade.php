@@ -140,6 +140,12 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label for="keterangan" class="col-lg-3 control-label">Keterangan</label>
+                                <div class="col-lg-8">
+                                    <input type="text" name="keterangan" id="keterangan" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label for="nama_pemesan" class="col-lg-3 control-label">Nama Pemesan</label>
                                 <div class="col-lg-8">
                                     <input type="text" name="nama_pemesan" id="nama_pemesan" class="form-control">
@@ -166,6 +172,7 @@
                                 <option value="tokopedia">Tokopedia</option>
                                 <option value="whatsapp">WhatsApp</option>
                                 <option value="lazada">Lazada</option>
+                                <option value="lazada">Telegram</option>
                                 <option value="offline">Offline</option>
                                 
                             </select>

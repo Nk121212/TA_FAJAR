@@ -29,7 +29,8 @@
                         <th>Penjualan</th>
                         <th>Pembelian</th>
                         <th>Pengeluaran</th>
-                        <th>Pendapatan</th>
+                        <th>Penggajian</th>
+                        <th>Pendapatan Bersih</th>
                     </thead>
                 </table>
             </div>
@@ -60,6 +61,7 @@
                 {data: 'penjualan'},
                 {data: 'pembelian'},
                 {data: 'pengeluaran'},
+                {data: 'gaji'},
                 {data: 'pendapatan'}
             ],
             dom: 'Brt',

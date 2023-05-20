@@ -51,7 +51,7 @@ class ListpoController extends Controller
             ->of($listpo->get())
             ->addIndexColumn()
             ->addColumn('aksi', function ($listpo) {
-                if ($listpo->status == 3 || strtolower($listpo->status) == "selesai") {
+                if ($listpo->status == 3 || strtolower($listpo->status) == "selesai" && $listpo->level == 2) {
                     return '
                 <div class="btn-group">
                     <button onclick="deleteData(`'. route('listpo.destroy', $listpo->id) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>

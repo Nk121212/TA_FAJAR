@@ -75,6 +75,7 @@ class PenjualanController extends Controller
         $penjualan->harga_bayar = 0;
         $penjualan->sumber_po=null;
         $penjualan->nama_catalog=null;
+        $penjualan->keterangan=null;
         $penjualan->status=1;
         $penjualan->save();
 
@@ -97,6 +98,7 @@ class PenjualanController extends Controller
         $penjualan->harga_bayar = $request->harga_bayar;
         $penjualan->sumber_po = $request->sumber_po;
         $penjualan->nama_catalog = $request->nama_catalog;
+        $penjualan->keterangan = $request->keterangan;
         $penjualan->update();
 
         $detail = PenjualanDetail::where('id_penjualan', $penjualan->id_penjualan)->get();
