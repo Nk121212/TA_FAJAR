@@ -71,7 +71,7 @@ export default function Dashboard() {
                 size={32}
               />
             }
-            title={'Baham Baku'}
+            title={'Bahan Baku'}
             subTitle={'Total bahan baku'}
             amount={data?.produk}
           />

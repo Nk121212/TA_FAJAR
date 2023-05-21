@@ -112,6 +112,7 @@ export default function Transaction({navigation}) {
             onPress={() => navigation.push('Payroll')}
           />
           <CardItem
+            hide={user.level !== 1 ? true : false}
             icon={
               <ClipboardDocumentListIcon
                 style={Tailwind`text-primary--purple`}

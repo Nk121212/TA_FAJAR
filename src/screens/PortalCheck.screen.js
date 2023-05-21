@@ -108,7 +108,7 @@ export default function PortalCheck() {
               renderItem={({item, index}) => (
                 <View
                   style={Tailwind`bg-white rounded-md p-3 mt-4 border ${
-                    item?.stok < 3 ? 'border-red-500' : 'border-white'
+                    item?.stok <= 5 ? 'border-red-500' : 'border-white'
                   } ${isExist ? '' : 'hidden'}`}>
                   <View
                     style={Tailwind`px-3 bg-primary--purple/05 rounded my-3`}>
@@ -122,13 +122,13 @@ export default function PortalCheck() {
                     />
                   </View>
 
-                  {item?.stok < 3 && (
+                  {item?.stok <= 5 && (
                     <View
                       style={Tailwind`flex-row items-center gap-1 bg-red-50 px-3 py-1 rounded-md`}>
                       <InformationCircleIcon color={'red'} size={18} />
                       <Text
                         style={Tailwind`font-gothic--regular text-xs text-red-500`}>
-                        Stok harus lebih dari 3
+                        Stok sudah menipis, silahkan hubungi admin untuk isi ulang stok
                       </Text>
                     </View>
                   )}

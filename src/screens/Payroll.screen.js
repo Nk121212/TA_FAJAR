@@ -203,26 +203,20 @@ export default function Payroll() {
               <View style={Tailwind`mt-2`}>
                 <Text
                   style={Tailwind`font-gothic--semibold bg-primary--purple/10 py-2 text-sm text-primary--purple text-center `}>
-                  LAPROAN GAJI BULAN{' '}
+                  LAPORAN GAJI{' '}
                   {moment(item?.selesai).format('MMMM YYYY').toUpperCase()}
                 </Text>
                 <View>
+                  <TextCols title={'Kode PO'} value={item?.kode} />
+                  <TextCols title={'No Pesanan'} value={item?.nopes} />
                   <TextCols title={'Nama'} value={item?.pegawai} />
                   <TextCols
                     title={'Tanggal Selesai'}
                     value={moment(item?.selesai)?.format('LLL')}
                   />
                   <TextCols
-                    title={'Gaji Pokok'}
-                    value={`Rp${ToRupiah(item?.harga)}`}
-                  />
-                  <TextCols
-                    title={'Bonus'}
-                    value={`Rp${ToRupiah(item?.bonus)}`}
-                  />
-                  <TextCols
-                    title={'Total Gaji'}
-                    value={`Rp${ToRupiah(item?.total)}`}
+                    title={'Gaji per Order'}
+                    value={`Rp ${ToRupiah(item?.harga)}`}
                   />
                 </View>
               </View>
