@@ -9,20 +9,23 @@ import {useCallback, useEffect, useState} from 'react';
 import {ReqOnProcessOrderList} from '../libs/fetchings/OnProcessOrder.lib';
 import {useFocusEffect} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import LoadingFetch from '../components/organisms/LoadingFetch.organism';
 
 export default function OngoingOrder({navigation}) {
   const user = useSelector(state => state.auth.user);
+  const [search, setSearch] = useState('');
   const [listOrder, setListOrder] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       const initData = async () => {
-        const response = await ReqOnProcessOrderList();
+        const response = await ReqOnProcessOrderList(search ? search : null);
 
         setListOrder(response.data);
       };
       initData();
-    }, []),
+    }, [search]),
   );
 
   const handleNavToEdit = item => {
@@ -43,15 +46,17 @@ export default function OngoingOrder({navigation}) {
 
       {/* Content Start --- */}
       <View style={Tailwind`px-6 mt-4 flex-1`}>
-        {/* <View
+        <View
           style={Tailwind`flex-row items-center gap-2 bg-white rounded-md px-3 shadow`}>
           <MagnifyingGlassIcon style={Tailwind`text-gray-400`} />
           <TextInput
             placeholder="Cari jenis pesanan"
             placeholderTextColor={'#10101040'}
             style={Tailwind`font-gothic--regular text-sm text-gray-900 flex-1`}
+            value={search}
+            onChangeText={t => setSearch(t)}
           />
-        </View> */}
+        </View>
 
         <View style={Tailwind``}>
           <FlatList
@@ -152,6 +157,7 @@ export default function OngoingOrder({navigation}) {
         </View>
       </View>
       {/* Content Start --- */}
+      {isLoading && <LoadingFetch />}
     </SafeAreaView>
   );
 }

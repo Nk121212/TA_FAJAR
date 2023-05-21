@@ -13,7 +13,7 @@ import Tailwind from '../libs/tailwinds/Tailwind.lib';
 import {MagnifyingGlassIcon} from 'react-native-heroicons/outline';
 import Divider from '../components/atoms/Divider.atom';
 import CustomButton from '../components/molecules/CustomButton.molecule';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {
   ReqDeleteOrder,
   ReqSendOrder,
@@ -24,16 +24,17 @@ import LoadingFetch from '../components/organisms/LoadingFetch.organism';
 export default function WaitingOrder() {
   const [listOrder, setListOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [search, setSearch] = useState('');
 
   const initData = async () => {
-    const response = await ReqWaitingOrdeList();
+    const response = await ReqWaitingOrdeList(search);
 
     setListOrder(response.data);
   };
 
   useEffect(() => {
     initData();
-  }, []);
+  }, [search]);
 
   const onDelete = async id => {
     setIsLoading(true);
@@ -96,15 +97,17 @@ export default function WaitingOrder() {
 
       {/* Content Start --- */}
       <View style={Tailwind`px-6 mt-4 flex-1`}>
-        {/* <View
+        <View
           style={Tailwind`flex-row items-center gap-2 bg-white rounded-md px-3 shadow`}>
           <MagnifyingGlassIcon style={Tailwind`text-gray-400`} />
           <TextInput
             placeholder="Cari jenis pesanan"
             placeholderTextColor={'#10101040'}
             style={Tailwind`font-gothic--regular text-sm text-gray-900 flex-1`}
+            value={search}
+            onChangeText={t => setSearch(t)}
           />
-        </View> */}
+        </View>
 
         <View style={Tailwind``}>
           <FlatList

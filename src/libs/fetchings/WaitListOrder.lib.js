@@ -2,7 +2,7 @@ import {ToastAndroid} from 'react-native';
 import axios from '../../config/axios/Axios.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const ReqWaitingOrdeList = async () => {
+export const ReqWaitingOrdeList = async search => {
   try {
     const token = await AsyncStorage.getItem('token');
     const response = await axios.get('/get_pesanan_menunggu', {
@@ -10,6 +10,9 @@ export const ReqWaitingOrdeList = async () => {
         Authorization: `Bearer ${JSON.parse(token)}`,
         // 'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
+      },
+      params: {
+        search,
       },
     });
 
