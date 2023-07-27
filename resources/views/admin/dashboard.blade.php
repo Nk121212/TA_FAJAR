@@ -27,35 +27,35 @@
         </div>
     </div> -->
     <!-- ./col -->
-    <div class="col-lg-3 col-xs-6">
+    <!--<div class="col-lg-3 col-xs-6">-->
         <!-- small box -->
-        <div class="small-box bg-yellow">
-            <div class="inner">
-                <h3>{{ $member }}</h3>
+    <!--    <div class="small-box bg-yellow">-->
+    <!--        <div class="inner">-->
+    <!--            <h3>{{ $member }}</h3>-->
 
-                <p>Total Member</p>
-            </div>
-            <div class="icon">
-                <i class="fa fa-id-card"></i>
-            </div>
-            <a href="{{ route('member.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
+    <!--            <p>Member</p>-->
+    <!--        </div>-->
+    <!--        <div class="icon">-->
+    <!--            <i class="fa fa-id-card"></i>-->
+    <!--        </div>-->
+    <!--        <a href="{{ route('member.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>-->
+    <!--    </div>-->
+    <!--</div>-->
     
-    <div class="col-lg-3 col-xs-6">
+    <!--<div class="col-lg-3 col-xs-6">-->
         <!-- small box -->
-        <div class="small-box bg-green">
-            <div class="inner">
-                <h3>{{ $produk }}</h3>
+    <!--    <div class="small-box bg-green">-->
+    <!--        <div class="inner">-->
+    <!--            <h3>{{ $produk }}</h3>-->
 
-                <p>Total Bahan</p>
-            </div>
-            <div class="icon">
-                <i class="fa fa-cubes"></i>
-            </div>
-            <a href="{{ route('produk.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
+    <!--            <p>Bahan Dekorasi</p>-->
+    <!--        </div>-->
+    <!--        <div class="icon">-->
+    <!--            <i class="fa fa-cubes"></i>-->
+    <!--        </div>-->
+    <!--        <a href="{{ route('produk.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>-->
+    <!--    </div>-->
+    <!--</div>-->
     <!-- ./col -->
     
     <!-- ./col -->
@@ -65,7 +65,7 @@
             <div class="inner">
                 <h3>{{ $penjualan2 }}</h3>
 
-                <p>Total Pesanan Menunggu</p>
+                <p>Pesanan Menunggu</p>
             </div>
             <div class="icon">
                 <i class="fa fa-inbox"></i>
@@ -76,11 +76,11 @@
     <!-- ./col -->
     <div class="col-lg-3 col-xs-6">
         <!-- small box -->
-        <div class="small-box bg-red">
+        <div class="small-box bg-yellow">
             <div class="inner">
                 <h3>{{ $listpo }}</h3>
 
-                <p>Total PO Berjalan</p>
+                <p>Pesanan Berjalan All</p>
             </div>
             <div class="icon">
                 <i class="fa fa-inbox"></i>
@@ -88,6 +88,97 @@
             <a href="{{ route('listpo.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
+    
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-gray">
+            <div class="inner">
+                <h3>{{ $listpo_1 }}</h3>
+
+                <p>Pesanan Berjalan - Pengerjaan</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-inbox"></i>
+            </div>
+            <a href="{{ route('listpo.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-navy">
+            <div class="inner">
+                <h3>{{ $listpo_2 }}</h3>
+
+                <p>Pesanan Berjalan - Dekor</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-inbox"></i>
+            </div>
+            <a href="{{ route('listpo.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-black">
+            <div class="inner">
+                <h3>{{ $listpo_3 }}</h3>
+
+                <p>Pesanan Berjalan - Design</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-inbox"></i>
+            </div>
+            <a href="{{ route('listpo.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-purple">
+            <div class="inner">
+                <h3>{{ $listpo_4 }}</h3>
+
+                <p>Pesanan Berjalan - Grafir</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-inbox"></i>
+            </div>
+            <a href="{{ route('listpo.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>{{ $listpo_5 }}</h3>
+
+                <p>Pesanan Berjalan - Revisi</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-inbox"></i>
+            </div>
+            <a href="{{ route('listpo.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>{{ $listpo_6 }}</h3>
+
+                <p>Pesanan Berjalan - Selesai</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-inbox"></i>
+            </div>
+            <a href="{{ route('listpo.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+    
     <!-- ./col -->
 </div>
 <!-- /.row -->

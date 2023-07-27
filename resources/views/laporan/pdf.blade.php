@@ -21,10 +21,12 @@
             <tr>
                 <th width="5%">No</th>
                 <th>Tanggal</th>
+                <th>Total Terjual</th>
                 <th>Penjualan</th>
                 <th>Pembelian</th>
                 <th>Pengeluaran</th>
-                <th>Pendapatan</th>
+                <th>Penggajian</th>
+                <th>Pendapatan Bersih</th>
             </tr>
         </thead>
         <tbody>

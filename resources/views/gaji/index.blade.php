@@ -103,7 +103,7 @@
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'kode'},
                 {data: 'pegawai'},
-                {data: 'selesai'},
+                {data: 'po_selesai'},
                 {data: 'harga'},
                 {data: 'bonus'},
                 {data: 'total'},

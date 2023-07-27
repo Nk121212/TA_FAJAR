@@ -188,7 +188,7 @@ class ApiListpoController extends Controller
         $listpo = Listpo::find($id);
         $listpo->update($request->all());
 
-        if ($request->id_statuses == 3) {
+        if ($request->id_statuses == 6) {
             $gaji = new Gaji();
             $gaji->id_list_po = $id;
             $gaji->tanggal_selesai = $listpo->updated_at;

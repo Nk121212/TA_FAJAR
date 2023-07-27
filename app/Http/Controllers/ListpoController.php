@@ -51,7 +51,7 @@ class ListpoController extends Controller
             ->of($listpo->get())
             ->addIndexColumn()
             ->addColumn('aksi', function ($listpo) {
-                if ($listpo->status == 3 || strtolower($listpo->status) == "selesai" && $listpo->level == 2) {
+                if ($listpo->status == 6 || strtolower($listpo->status) == "Selesai" && $listpo->level == 2) {
                     return '
                 <div class="btn-group">
                     <button onclick="deleteData(`'. route('listpo.destroy', $listpo->id) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
@@ -138,6 +138,14 @@ class ListpoController extends Controller
 
     }
 
+    // public function status_po1(){
+    //     $listpo_1 = DB::table('list_po')
+    //     ->select('*')
+    //     ->where('id_statuses','=','1')
+    //     ->get();
+    //     return view('listpo.index', compact('listpo_1'));
+    // }
+
     /**
      * Update the specified resource in storage.
      *
@@ -150,7 +158,7 @@ class ListpoController extends Controller
         $listpo = Listpo::find($id);
         $listpo->update($request->all());
 
-        if ($request->id_statuses == 3) {
+        if ($request->id_statuses == 6) {
             $gaji = new Gaji();
             $gaji->id_list_po = $id;
             $gaji->tanggal_selesai = $listpo->updated_at;

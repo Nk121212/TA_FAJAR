@@ -179,6 +179,19 @@
                                 </div>
                             </div>
 
+                        <div class="form-group row">
+                        <label for="sumber_po" class="col-lg-3 control-label">Gambar</label>
+                                <div class="col-lg-8">
+                            <input type="file" name="foto2" class="form-control" id="foto2"
+                                onchange="preview('.tampil-foto', this.files[0])">
+                            <span class="help-block with-errors"></span>
+                            <br>
+                            <div class="tampil-foto2">
+                                <img src="{{ url($penjualan->foto2 ?? '/') }}" width="200">
+                            </div>
+                        </div>
+                    </div>
+
                         </form>
                     </div>
                 </div>
@@ -306,6 +319,16 @@
         }
             $('#harga_bayar').val(value);
         });
+
+         $.get('/penjualan_detail/list_produk')
+            .done((response) => {
+                let data = response;
+                data.forEach((produk) => {
+                    let selected = ''; 
+                    $('datalist #list_produk').after('<option value=' + produk.id + ' ' + selected + '>' + produk.nama + '</option');
+                })
+            });
+
     });
 
 

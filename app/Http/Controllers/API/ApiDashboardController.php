@@ -25,7 +25,18 @@ class ApiDashboardController extends Controller
         $supplier = Supplier::count();
         $member = Member::count();
         $listpo = Listpo::count();
-        $penjualan2 = Penjualan::count();
+        
+        //per status list po
+        $listpo = Listpo::count(); //total all
+        $listpo_1 = Listpo::where('id_statuses','=','1')->count(); //pengerjaan
+        $listpo_2 = Listpo::where('id_statuses','=','2')->count(); //decor
+        $listpo_3 = Listpo::where('id_statuses','=','3')->count(); //design
+        $listpo_4 = Listpo::where('id_statuses','=','4')->count(); //grafir
+        $listpo_5 = Listpo::where('id_statuses','=','5')->count(); //revisi
+        $listpo_6 = Listpo::where('id_statuses','=','6')->count(); //selesai
+        
+        // $penjualan2 = Penjualan::count()->WHERE('status','=','1');
+        $penjualan2 = Penjualan::where('status','=','1')->count();
 
         $tanggal_awal = date('Y-m-01');
         $tanggal_akhir = date('Y-m-d');
@@ -56,6 +67,12 @@ class ApiDashboardController extends Controller
                 'supplier' => $supplier,
                 'member' => $member,
                 'list_po' => $listpo,
+                'list_po1' => $listpo_1,
+                'list_po2' => $listpo_2,
+                'list_po3' => $listpo_3,
+                'list_po4' => $listpo_4,
+                'list_po5' => $listpo_5,
+                'list_po6' => $listpo_6,
                 'penjualan2' => $penjualan2,
                 'tanggal' => $data_tanggal,
                 'pendapatan' => $data_pendapatan

@@ -35,6 +35,7 @@ class LaporanController extends Controller
             $tanggal = $awal;
             $awal = date('Y-m-d', strtotime("+1 day", strtotime($awal)));
 
+            $total_barang = Penjualan::where('created_at', 'LIKE', "%$tanggal%")->count('*');
             $total_penjualan = Penjualan::where('created_at', 'LIKE', "%$tanggal%")->sum('harga_bayar');
             $total_pembelian = Pembelian::where('created_at', 'LIKE', "%$tanggal%")->sum('bayar');
             $total_pengeluaran = Pengeluaran::where('created_at', 'LIKE', "%$tanggal%")->sum('nominal');
@@ -46,6 +47,7 @@ class LaporanController extends Controller
             $row = array();
             $row['DT_RowIndex'] = $no++;
             $row['tanggal'] = tanggal_indonesia($tanggal, false);
+            $row['total_barang'] = $total_barang;
             $row['penjualan'] = format_uang($total_penjualan);
             $row['pembelian'] = format_uang($total_pembelian);
             $row['pengeluaran'] = format_uang($total_pengeluaran);
@@ -58,10 +60,11 @@ class LaporanController extends Controller
         $data[] = [
             'DT_RowIndex' => '',
             'tanggal' => '',
+            'total_barang'=> '',
             'penjualan' => '',
-            'pembelian' => '',
-            'gaji' => '',
-            'pengeluaran' => 'Total Pendapatan',
+            'pembelian' => 'Total Terjual All',
+            'gaji' => 'Total Pendapatan',
+            'pengeluaran' => format_uang($total_terjual_barang),
             'pendapatan' => format_uang($total_pendapatan),
         ];
 

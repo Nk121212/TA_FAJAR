@@ -77,6 +77,7 @@ class PenjualanController extends Controller
         $penjualan->nama_catalog=null;
         $penjualan->keterangan=null;
         $penjualan->status=1;
+        $penjualan->foto2=null;
         $penjualan->save();
 
         session(['id_penjualan' => $penjualan->id_penjualan]);
@@ -99,6 +100,15 @@ class PenjualanController extends Controller
         $penjualan->sumber_po = $request->sumber_po;
         $penjualan->nama_catalog = $request->nama_catalog;
         $penjualan->keterangan = $request->keterangan;
+
+        if ($request->hasFile('foto2')) {
+            $file = $request->file('foto2');
+            $nama = 'logo-' . date('YmdHis') . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('/img'), $nama);
+
+            $penjualan->foto2 = "/img/$nama";
+        }
+
         $penjualan->update();
 
         $detail = PenjualanDetail::where('id_penjualan', $penjualan->id_penjualan)->get();

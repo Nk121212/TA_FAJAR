@@ -23,13 +23,26 @@ class GajiController extends Controller
     public function data(Request $request)
     {
         // $listpo = Listpo::with('status')->orderBy('id', 'desc')->get();
-        $gaji = DB::table('list_po')
-            ->join('users', 'users.id', '=', 'list_po.assigne')
-            ->join('penggajian', 'list_po.id', '=', 'penggajian.id_list_po')
-            ->select('list_po.kode_po as kode', 'list_po.id_penjualan as nopes', 'users.name as pegawai', 'list_po.updated_at as selesai', 'penggajian.harga as harga', 'penggajian.bonus as bonus',
-                DB::raw('penggajian.harga + penggajian.bonus as total'));
+        
+        //QUERY ASLI
+        // $gaji = DB::table('list_po')
+        //     ->join('users', 'users.id', '=', 'list_po.assigne')
+        //     ->join('penggajian', 'list_po.id', '=', 'penggajian.id_list_po')
+        //     ->where('penggajian.tanggal_selesai IN (SELECT MAX( tanggal_selesai ) FROM penggajian')
+        //     ->select('list_po.kode_po as kode', 'list_po.id_penjualan as nopes', 'users.name as pegawai', 'list_po.updated_at as selesai', 'penggajian.harga as harga', 'penggajian.bonus as bonus', 'penggajian.tanggal_selesai as po_selesai',
+        //     DB::raw('penggajian.harga + penggajian.bonus as total'))
+        //     ->groupBy('penggajian.id_list_po');
 
-        $awal = isset($request->tanggal_awal) ? $request->tanggal_awal : '';
+        $gaji = DB::table('list_po')
+        ->select('list_po.kode_po as kode', 'list_po.id_penjualan as nopes', 'users.name as pegawai', 'list_po.updated_at as selesai', 'penggajian.harga as harga', 'penggajian.bonus as bonus', 'penggajian.tanggal_selesai as po_selesai',
+        DB::raw('(penggajian.harga + penggajian.bonus) as total'))
+        ->join('users','users.id','=','list_po.assigne')
+        ->join('penggajian','list_po.id','=','penggajian.id_list_po')
+        ->whereRaw('tanggal_selesai IN (SELECT MAX(tanggal_selesai) FROM penggajian group by id_list_po)');
+
+        
+
+        $awal = isset($request->tanggal_awal) ? $request->tanggal_awal : '';    
         $akhir = isset($request->tanggal_akhir) ? $request->tanggal_akhir : '';
         $tgl_awal  = date($awal) . ' 00:00:00';
         $tgl_akhir = date($akhir) . ' 23:59:59';
@@ -38,31 +51,31 @@ class GajiController extends Controller
         if (Auth::user()->level == 1) { # ADMIN
             if ($awal != null && $akhir != null && $request->assigne != null) {
                 if ($request->tanggal_awal <= $request->tanggal_akhir) {
-                    $gaji = $gaji->where('list_po.id_statuses', '=', '3')
+                    $gaji = $gaji->where('list_po.id_statuses', '=', '6')
                         ->where('list_po.assigne', '=', $request->assigne)
                         ->whereBetween('list_po.updated_at', [$tgl_awal, $tgl_akhir]);
                 }
             } elseif ($awal != null && $akhir != null && $request->assigne == null) {
                 if ($request->tanggal_awal <= $request->tanggal_akhir) {
-                    $gaji = $gaji->where('list_po.id_statuses', '=', '3')
+                    $gaji = $gaji->where('list_po.id_statuses', '=', '6')
                         ->whereBetween('list_po.updated_at', [$tgl_awal, $tgl_akhir]);
                 }
             } elseif ($request->assigne != null && $awal == null && $akhir == null) {
-                $gaji = $gaji->where('list_po.id_statuses', '=', '3')
+                $gaji = $gaji->where('list_po.id_statuses', '=', '6')
                     ->where('list_po.assigne', '=', $request->assigne);
             } else {
                 
-                $gaji = $gaji->where('list_po.id_statuses', '=', '3');
+                $gaji = $gaji->where('list_po.id_statuses', '=', '6');
             }
         } else { # PEGAWAI
             if ($request->tanggal_awal != null && $request->tanggal_akhir != null) {
                 if ($request->tanggal_awal <= $request->tanggal_akhir) {
-                    $gaji = $gaji->where('list_po.id_statuses', '=', '3')
+                    $gaji = $gaji->where('list_po.id_statuses', '=', '6')
                         ->where('list_po.assigne', '=', Auth::user()->id)
                         ->whereBetween('list_po.updated_at', [$tgl_awal, $tgl_akhir]);
                 }
             } else {
-                $gaji = $gaji->where('list_po.id_statuses', '=', '3')
+                $gaji = $gaji->where('list_po.id_statuses', '=', '6')
                     ->where('list_po.assigne', '=', Auth::user()->id);
             }
         }
@@ -163,14 +176,14 @@ class GajiController extends Controller
             ->join('users', 'users.id', '=', 'list_po.assigne')
             ->join('penggajian', 'list_po.id', '=', 'penggajian.id_list_po')
             ->select('list_po.kode_po as kode', 'users.name as pegawai', 'list_po.updated_at as selesai',
-                'penggajian.harga as harga', 'penggajian.bonus as bonus',
+                'penggajian.harga as harga', 'penggajian.bonus as bonus', 'penggajian.tanggal_selesai as po_selesai',
                 DB::raw('penggajian.harga + penggajian.bonus as total'))
-            ->where('list_po.id_statuses', '=', '3');
+            ->where('list_po.id_statuses', '=', '6');
 
         if (Auth::user()->level == 1) {
             if ($awal != null && $akhir != null && $request->assigne != null) {
                 if ($request->tanggal_awal <= $request->tanggal_akhir) {
-                    $gaji = $gaji->where('list_po.id_statuses', '=', '3')
+                    $gaji = $gaji->where('list_po.id_statuses', '=', '6')
                         ->where('list_po.assigne', '=', $request->assigne)
                         ->whereBetween('list_po.updated_at', [$awal, $akhir])->get();
                 }
@@ -179,12 +192,12 @@ class GajiController extends Controller
         } else {
             if ($request->tanggal_awal != null && $request->tanggal_akhir != null) {
                 if ($request->tanggal_awal <= $request->tanggal_akhir) {
-                    $gaji = $gaji->where('list_po.id_statuses', '=', '3')
+                    $gaji = $gaji->where('list_po.id_statuses', '=', '6')
                         ->where('list_po.assigne', '=', Auth::user()->id)
                         ->whereBetween('list_po.updated_at', [$awal, $akhir])->get();
                 }
             } else {
-                $gaji = $gaji->where('list_po.id_statuses', '=', '3')
+                $gaji = $gaji->where('list_po.id_statuses', '=', '6')
                     ->where('list_po.assigne', '=', Auth::user()->id)->get();
             }
             $pegawai = DB::table('users')->where('id', '=', Auth::user()->id)->first();

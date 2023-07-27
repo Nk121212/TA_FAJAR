@@ -7,6 +7,7 @@ use App\Models\Penjualan;
 use App\Models\PenjualanDetail;
 use App\Models\Produk;
 use App\Models\Setting;
+// use App\Models\ListProduk;
 use Illuminate\Http\Request;
 
 class PenjualanDetailController extends Controller
@@ -143,4 +144,10 @@ class PenjualanDetailController extends Controller
 
         return response()->json($data);
     }
+
+    // public function getListProduk()
+    // {
+    //     $listproduk = ListProduk::all();
+    //     return response()->json($listproduk);
+    // }
 }

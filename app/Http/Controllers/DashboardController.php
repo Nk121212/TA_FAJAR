@@ -20,9 +20,19 @@ class DashboardController extends Controller
         $produk = Produk::count();
         $supplier = Supplier::count();
         $member = Member::count();
-        $listpo = Listpo::count();
-        $penjualan2 = Penjualan::count();
-
+        
+        //per status list po
+        $listpo = Listpo::count(); //total all
+        $listpo_1 = Listpo::where('id_statuses','=','1')->count(); //pengerjaan
+        $listpo_2 = Listpo::where('id_statuses','=','2')->count(); //decor
+        $listpo_3 = Listpo::where('id_statuses','=','3')->count(); //design
+        $listpo_4 = Listpo::where('id_statuses','=','4')->count(); //grafir
+        $listpo_5 = Listpo::where('id_statuses','=','5')->count(); //revisi
+        $listpo_6 = Listpo::where('id_statuses','=','6')->count(); //selesai
+        
+        // $penjualan2 = Penjualan::count()->WHERE('status','=','1');
+        $penjualan2 = Penjualan::where('status','=','1')->count();
+        
         $tanggal_awal = date('Y-m-01');
         $tanggal_akhir = date('Y-m-d');
 
@@ -45,9 +55,14 @@ class DashboardController extends Controller
         $tanggal_awal = date('Y-m-01');
 
         if (auth()->user()->level == 1) {
-            return view('admin.dashboard', compact('penjualan2', 'kategori','listpo', 'produk', 'supplier', 'member', 'tanggal_awal', 'tanggal_akhir', 'data_tanggal', 'data_pendapatan'));
+            return view('admin.dashboard', compact('penjualan2', 'kategori','listpo','listpo_1','listpo_2','listpo_3','listpo_4','listpo_5','listpo_6', 'produk', 'supplier', 'member', 'tanggal_awal', 'tanggal_akhir', 'data_tanggal', 'data_pendapatan'));
         } else {
             return view('kasir.dashboard');
         }
     }
+
+    
+    
+    
+    
 }

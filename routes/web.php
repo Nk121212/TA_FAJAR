@@ -16,7 +16,9 @@ use App\Http\Controllers\{
     UserController,
     ListpoController,
     GajiController,
-    PortletController,  
+    PortletController,
+    ForgotPasswordController,
+    ResetPasswordController,  
 };
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +41,11 @@ Route::get('/', function () {
 Route::get('/portlet', [PortletController::class, 'index'])->name('portlet');
 Route::get('/portlet/data', [PortletController::class, 'data']);
 
+Route::get('/forget-password', [ForgotPasswordController::class , 'getEmail'])->name('forget-password.request');
+Route::post('/forget-password', [ForgotPasswordController::class , 'postEmail'])->name('forget-password.email');
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'getPassword'])->name('reset-password.request');
+Route::post('/reset-password', [ResetPasswordController::class, 'updatePassword'])->name('reset-password.update');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
@@ -48,6 +55,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/listpo/data', [ListpoController::class, 'data'])->name('listpo.data');
         Route::resource('/listpo', ListpoController::class);
+
+        // Route::get('/listpo/pengerjaan', [ListpoController::class, 'status_po1'])->name('listpo.status_po1');
+        // Route::resource('/listpo', ListpoController::class);
 
         Route::get('/gaji/data', [GajiController::class, 'data'])->name('gaji.data');
        Route::resource('/gaji', GajiController::class);
@@ -78,6 +88,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/pembelian_detail/loadditerima/{total}', [PembelianDetailController::class, 'loadDiterima'])->name('pembelian_detail.load_diterima');
         Route::resource('/pembelian_detail', PembelianDetailController::class)
             ->except('create', 'show', 'edit');
+
+        
 
         Route::get('/penjualan/data', [PenjualanController::class, 'data'])->name('penjualan.data');
         Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');

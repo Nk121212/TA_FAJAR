@@ -1,8 +1,19 @@
 @extends('layouts.auth')
 
+@section('title')
+Log in
+@endsection
+
 @section('login')
 <div class="login-box">
-
+@if (Session::has('reset-pass'))
+    <div class="alert alert-success text-center" role="alert" style="position:relative;">
+        <strong>{{ Session::get('reset-pass') }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color: #fff;opacity:1;position:absolute;top:1px;right:6px;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    @endif
     <!-- /.login-logo -->
     <div class="login-box-body">
         <div class="col-xs-8">
@@ -38,19 +49,24 @@
                     <span class="help-block with-errors"></span>
                 @enderror
             </div>
-            <div class="row">
-                <div class="col-xs-8">
+            <div class="row" style="display: flex; align-items:center;">
+                <div class="col-xs-6">
                     <div class="checkbox icheck">
                         <label>
                             <input type="checkbox"> Remember Me
                         </label>
                     </div>
                 </div>
-                <!-- /.col -->
+                <div class="col-xs-6 text-right">
+                    <a href="{{ route('forget-password.request') }}"><u>Lupa Password?</u></a>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-xs-8"></div>
                 <div class="col-xs-4">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
                 </div>
-                <!-- /.col -->
             </div>
         </form>
     </div>
